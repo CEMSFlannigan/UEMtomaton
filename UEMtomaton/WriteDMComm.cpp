@@ -27,11 +27,11 @@ void WriteDMComm::WriteData(std::string FileName, std::string val1, std::string 
 
 	OpenFile.open(FileName);
 
-	OpenFile << val1 + "\n";
-	OpenFile << val2 + "\n";
-	OpenFile << val3 + "\n0\n0\n0\n";
-	OpenFile << val4 + "\n";
-	OpenFile << val5 + "\n0\n0\n0\n0\n";
+	OpenFile << val1 + "\\\n\0";
+	OpenFile << val2 + ".ext\n\0";
+	OpenFile << val3 + ".ext\n0\n0\n0\n\0";
+	OpenFile << val4 + "\n\0";
+	OpenFile << val5 + "\n0\n0\n0\n0\n\0";
 
 	OpenFile.close();
 
