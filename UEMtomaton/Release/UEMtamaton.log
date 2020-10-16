@@ -1,0 +1,26 @@
+﻿  UEMAuto.cpp
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\UEMAuto.h(1173,27): warning C4244:  '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\UEMAuto.h(1093,1): warning C4996:  'spawnl': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _spawnl. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\process.h(303): message :  see declaration of 'spawnl'
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\UEMAuto.h(1334,19): warning C4018:  '<': signed/unsigned mismatch
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\UEMAuto.h(1356,19): warning C4018:  '<': signed/unsigned mismatch
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\UEMAuto.h(1361,43): warning C4018:  '<': signed/unsigned mismatch
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\UEMAuto.h(1349,1): warning C4996:  'ctime': This function or variable may be unsafe. Consider using ctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\time.h(476): message :  see declaration of 'ctime'
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\UEMAuto.h(1767,1): warning C4305:  '=': truncation from 'int' to 'char'
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\UEMAuto.h(1767,22): warning C4309:  '=': truncation of constant value
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\UEMAuto.h(1946,21): warning C4018:  '<=': signed/unsigned mismatch
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\UEMAuto.h(1953,41): warning C4018:  '<=': signed/unsigned mismatch
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\UEMAuto.h(2023,20): warning C4018:  '<=': signed/unsigned mismatch
+  WriteDMComm.cpp
+  WriteULG.cpp
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\UEMAuto.h(2030,40): warning C4018:  '<=': signed/unsigned mismatch
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\WriteULG.cpp(38,1): warning C4996:  'ctime': This function or variable may be unsafe. Consider using ctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\time.h(476): message :  see declaration of 'ctime'
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\WriteULG.cpp(45,1): warning C4996:  'ctime': This function or variable may be unsafe. Consider using ctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\time.h(476): message :  see declaration of 'ctime'
+C:\Users\ddu00001\Desktop\CPP\UEMtamaton\WriteULG.cpp(53,1): warning C4996:  'ctime': This function or variable may be unsafe. Consider using ctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  Generating Code...
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\time.h(476): message :  see declaration of 'ctime'
+  .NETFramework,Version=v4.7.2.AssemblyAttributes.cpp
+  UEMtamaton.vcxproj -> C:\Users\ddu00001\Desktop\CPP\UEMtamaton\Release\UEMtamaton.exe
