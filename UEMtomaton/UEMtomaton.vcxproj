@@ -23,9 +23,9 @@
     <ProjectGuid>{AE870A89-52FD-4425-8368-A389DEEDCB79}</ProjectGuid>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>UEMtomaton</RootNamespace>
+    <RootNamespace>UEMtamaton</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>UEMtomaton</ProjectName>
+    <ProjectName>UEMtamaton</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

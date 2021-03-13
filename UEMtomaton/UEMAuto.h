@@ -60,7 +60,6 @@ double timeLeft; // keeps track of the time left in a run. This is an estimated
 
 double spdlght; // m/s
 double curZero; // As of August 16th, 2019 position 293.527 mm on the delay stage corresponds to 0 ps
-double curTimeEnd;
 double mm_to_fs;
 double curdelTime; // current delay position in terms of time relative to some fixed position on the delay stage
 
@@ -94,9 +93,8 @@ namespace UEMtamaton {
 			InitializeComponent();
 
 			spdlght = 299792458;
-			mm_to_fs = 1e12 / spdlght / 1000;
-			curZero = 293.527;
-			curTimeEnd = -1 * curZero * mm_to_fs;
+			mm_to_fs = 1e12 / spdlght / 1000 / 2;
+			curZero = 293.527; /// mm
 			units[0] = 'p'; // initialize with ps
 			units[1] = 's';
 			designation = -1; // to tell either side that no designation has been assigned yet.
@@ -2236,7 +2234,7 @@ namespace UEMtamaton {
 					this->BeginInvoke(gcnew killDelUpdater(this, &UEMAuto::delKillUpdater));
 					cleanupSoloist();
 				}
-				curdelTime = (((positionFeedback - curZero) / 1000) / spdlght) * 1e12;
+				curdelTime = ((2 * (positionFeedback - curZero) / 1000) / spdlght) * 1e12;
 				this->BeginInvoke(gcnew delDistUpdater(this, &UEMAuto::distDelUpdater));
 				this->BeginInvoke(gcnew delTimeUpdater(this, &UEMAuto::timeDelUpdater));
 				System::Threading::Thread::Sleep(100);
