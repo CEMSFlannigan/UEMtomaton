@@ -2234,7 +2234,7 @@ namespace UEMtamaton {
 					this->BeginInvoke(gcnew killDelUpdater(this, &UEMAuto::delKillUpdater));
 					cleanupSoloist();
 				}
-				curdelTime = ((2 * (positionFeedback - curZero) / 1000) / spdlght) * 1e12;
+				curdelTime = (((positionFeedback - curZero) / 1000) / spdlght) * 1e12;
 				this->BeginInvoke(gcnew delDistUpdater(this, &UEMAuto::distDelUpdater));
 				this->BeginInvoke(gcnew delTimeUpdater(this, &UEMAuto::timeDelUpdater));
 				System::Threading::Thread::Sleep(100);
