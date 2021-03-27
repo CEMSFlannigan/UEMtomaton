@@ -930,7 +930,7 @@ namespace UEMtamaton {
 			this->Controls->Add(this->label1);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"UEMAuto";
-			this->Text = L"UEMtamaton";
+			this->Text = L"UEMtomaton";
 			this->cameraTab->ResumeLayout(false);
 			this->tabPage2->ResumeLayout(false);
 			this->tabPage2->PerformLayout();
