@@ -2310,6 +2310,10 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 		{
 
 			repeatValue = std::stoi((msclr::interop::marshal_as<std::string>(this->RepeatBox->Text).c_str())); // casts the value in RepeatBox to int
+			if (repeatValue < 0)
+			{
+				repeatValue = 0;
+			}
 			this->RepeatBox->Text = gcnew String(std::to_string(repeatValue).c_str()); // sets the value in RepeatBox to repeatValue. Defensively protects against invalid values by displaying incorrectly typed values as their ASCII to numerical conversion.
 
 		}
