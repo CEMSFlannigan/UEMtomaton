@@ -1,4 +1,3 @@
-C:\Users\ddu00001\Desktop\UEMtomaton\Release\UEMtamaton.vcxprojAssemblyReference.cache
-C:\Users\ddu00001\Desktop\UEMtomaton\Release\UEMtamaton.UEMAuto.resources
+C:\Users\ddu00001\Desktop\UEMtomaton\Release\UEMtomaton.UEMAuto.resources
 C:\Users\ddu00001\Desktop\UEMtomaton\Release\UEMtamaton.vcxproj.GenerateResource.cache
-C:\Users\ddu00001\Desktop\UEMtomaton\Release\UEMtamaton.exe
+C:\Users\ddu00001\Desktop\UEMtomaton\Release\UEMtomaton.exe

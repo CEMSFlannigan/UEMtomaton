@@ -55,6 +55,7 @@ int totPoints; // the total number of points in the experimental time points arr
 
 int designation; // used to designate whether camera or delay stage after pressing the initialize buttons on either side
 int runStat; // indicates the status of a currently running scan. 0 indicates not running. 1 indicates running. 2 indicates a pause. 3 indicates a stop command which will switch to 0.
+int repeatValue; // indicates the number of repeat scans there will be in a single run. This will be defaulted to zero to indicate a single pass.
 int butPressMeantime; // indicates whether a button has been pressed while a run is occuring (pause, play, or stop)
 double timeLeft; // keeps track of the time left in a run. This is an estimated
 
@@ -76,7 +77,7 @@ DWORD handleCount = 0;
 DOUBLE positionFeedback;
 
 // Declaring a namespace and all constructor methods
-namespace UEMtamaton {
+namespace UEMtomaton {
 
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -98,7 +99,8 @@ namespace UEMtamaton {
 			units[0] = 'p'; // initialize with ps
 			units[1] = 's';
 			designation = -1; // to tell either side that no designation has been assigned yet.
-			runStat = 0; // set default value of runstat
+			runStat = 0; // set default value of runStat
+			repeatValue = 0; // set default value of repeatValue
 			timeLeft = 0; // set the estimated time left to zero
 		}
 
@@ -214,6 +216,10 @@ namespace UEMtamaton {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Timepoint;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ DelayPos;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ delayStatus;
+private: System::Windows::Forms::TextBox^ RepeatBox;
+private: System::Windows::Forms::Label^ RepeatLabel;
+
+
 
 
 
@@ -243,6 +249,8 @@ namespace UEMtamaton {
 			this->ContentPanel = (gcnew System::Windows::Forms::ToolStripContentPanel());
 			this->cameraTab = (gcnew System::Windows::Forms::TabControl());
 			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
+			this->RepeatBox = (gcnew System::Windows::Forms::TextBox());
+			this->RepeatLabel = (gcnew System::Windows::Forms::Label());
 			this->DataReadouts = (gcnew System::Windows::Forms::DataGridView());
 			this->Step = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Timepoint = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
@@ -363,6 +371,8 @@ namespace UEMtamaton {
 			// 
 			// tabPage2
 			// 
+			this->tabPage2->Controls->Add(this->RepeatBox);
+			this->tabPage2->Controls->Add(this->RepeatLabel);
 			this->tabPage2->Controls->Add(this->DataReadouts);
 			this->tabPage2->Controls->Add(this->stopButton);
 			this->tabPage2->Controls->Add(this->pauseButton);
@@ -397,6 +407,24 @@ namespace UEMtamaton {
 			this->tabPage2->TabIndex = 1;
 			this->tabPage2->Text = L"Camera Side";
 			this->tabPage2->UseVisualStyleBackColor = true;
+			// 
+			// RepeatBox
+			// 
+			this->RepeatBox->Location = System::Drawing::Point(109, 150);
+			this->RepeatBox->Name = L"RepeatBox";
+			this->RepeatBox->Size = System::Drawing::Size(33, 20);
+			this->RepeatBox->TabIndex = 24;
+			this->RepeatBox->Text = L"0";
+			this->RepeatBox->TextChanged += gcnew System::EventHandler(this, &UEMAuto::RepeatBox_TextChanged);
+			// 
+			// RepeatLabel
+			// 
+			this->RepeatLabel->AutoSize = true;
+			this->RepeatLabel->Location = System::Drawing::Point(25, 153);
+			this->RepeatLabel->Name = L"RepeatLabel";
+			this->RepeatLabel->Size = System::Drawing::Size(78, 13);
+			this->RepeatLabel->TabIndex = 23;
+			this->RepeatLabel->Text = L"Repeat Scans:";
 			// 
 			// DataReadouts
 			// 
@@ -521,7 +549,7 @@ namespace UEMtamaton {
 			// timeRemLab
 			// 
 			this->timeRemLab->AutoSize = true;
-			this->timeRemLab->Location = System::Drawing::Point(161, 156);
+			this->timeRemLab->Location = System::Drawing::Point(284, 153);
 			this->timeRemLab->Name = L"timeRemLab";
 			this->timeRemLab->Size = System::Drawing::Size(38, 13);
 			this->timeRemLab->TabIndex = 19;
@@ -567,7 +595,7 @@ namespace UEMtamaton {
 			// tRT
 			// 
 			this->tRT->AutoSize = true;
-			this->tRT->Location = System::Drawing::Point(25, 156);
+			this->tRT->Location = System::Drawing::Point(148, 153);
 			this->tRT->Name = L"tRT";
 			this->tRT->Size = System::Drawing::Size(140, 13);
 			this->tRT->TabIndex = 18;
@@ -576,7 +604,7 @@ namespace UEMtamaton {
 			// nsIndicator
 			// 
 			this->nsIndicator->AutoSize = true;
-			this->nsIndicator->Location = System::Drawing::Point(351, 121);
+			this->nsIndicator->Location = System::Drawing::Point(351, 119);
 			this->nsIndicator->Name = L"nsIndicator";
 			this->nsIndicator->Size = System::Drawing::Size(36, 17);
 			this->nsIndicator->TabIndex = 16;
@@ -595,7 +623,7 @@ namespace UEMtamaton {
 			// 
 			this->psIndicator->AutoSize = true;
 			this->psIndicator->Checked = true;
-			this->psIndicator->Location = System::Drawing::Point(310, 121);
+			this->psIndicator->Location = System::Drawing::Point(310, 119);
 			this->psIndicator->Name = L"psIndicator";
 			this->psIndicator->Size = System::Drawing::Size(36, 17);
 			this->psIndicator->TabIndex = 15;
@@ -642,7 +670,7 @@ namespace UEMtamaton {
 			// 
 			// fileNameBase
 			// 
-			this->fileNameBase->Location = System::Drawing::Point(110, 120);
+			this->fileNameBase->Location = System::Drawing::Point(110, 118);
 			this->fileNameBase->Name = L"fileNameBase";
 			this->fileNameBase->Size = System::Drawing::Size(189, 20);
 			this->fileNameBase->TabIndex = 9;
@@ -651,7 +679,7 @@ namespace UEMtamaton {
 			// label10
 			// 
 			this->label10->AutoSize = true;
-			this->label10->Location = System::Drawing::Point(25, 123);
+			this->label10->Location = System::Drawing::Point(25, 121);
 			this->label10->Name = L"label10";
 			this->label10->Size = System::Drawing::Size(79, 13);
 			this->label10->TabIndex = 8;
@@ -1533,7 +1561,7 @@ namespace UEMtamaton {
 		System::Void upDelProgRun(int stepVal)
 		{
 			this->runProg->Minimum = 0;
-			this->runProg->Maximum = totPoints;
+			this->runProg->Maximum = totPoints * (repeatValue + 1);
 			this->runProg->Value = stepVal + 1;
 			this->runProg->Update();
 		}
@@ -1607,7 +1635,9 @@ namespace UEMtamaton {
 			int firstPass = 0;
 			int recvSignal = 0;
 			int firstPause = 1;
-			int curStep = 0;
+			int curStep = 0; // current step in the entire image set, including repeats
+			int curScan = 0; // current scan
+			int curScanStep = 0; /// current step in the scan, not including previous scans
 			int a;
 
 			DateTime timeInit;
@@ -1644,6 +1674,7 @@ namespace UEMtamaton {
 
 			HWND hWnd;
 			int timeout = 3600 * 4;
+			int totImages = totPoints * (repeatValue + 1); // The total number of images including the number of times the scan is to be repeated.
 
 			this->BeginInvoke(gcnew DelRunGridClear(this, &UEMAuto::DelGridRunClear));
 
@@ -1713,17 +1744,17 @@ namespace UEMtamaton {
 					else
 					{
 
-						curTimePoint = expArr[curStep];
+						curTimePoint = expArr[curScanStep];
 						curDistPoint = curTimePoint / mm_to_fs + curZero;
 
-						stepString = gcnew String(std::to_string(curStep + 1).c_str());
+						stepString = gcnew String(std::to_string(curScanStep + 1).c_str());
 						timeString = gcnew String(std::to_string(curTimePoint).c_str());
 						posString = gcnew String(std::to_string(curDistPoint).c_str());
 						statString = "Moving delay stage...";
 
 						this->BeginInvoke(gcnew AddDelRunGridRow(this, &UEMAuto::DelGridRowAdd), stepString, timeString, posString, statString);
 
-						timeVal = std::to_string(expArr[curStep]);
+						timeVal = std::to_string(expArr[curScanStep]);
 
 						cc_buffer[0] = '1';
 
@@ -1780,20 +1811,27 @@ namespace UEMtamaton {
 							delayText = gcnew String(std::to_string((int)curDelay).c_str());
 						}
 
-						curFileName = this->fileNameBase->Text + "_0_" + gcnew String(std::to_string(curStep + 1).c_str()) + "_" + delayText + gcnew String(units) + ".dm4";
+						curScanStep = curStep % totPoints; // current step in the scan
+
+						if ((curStep + 1) > totPoints)
+						{
+							curScan = (curStep - curScanStep) / totPoints; // declares the current scan number (begins at zero and increments upwards)
+						}
+
+						curFileName = this->fileNameBase->Text + "_" + gcnew String(std::to_string(curScan).c_str()) + "_" + gcnew String(std::to_string(curScanStep + 1).c_str()) + "_" + delayText + gcnew String(units) + ".dm4";
 						curFileTot = this->fileSavePath->Text + "\\" + curFileName;
 						ulgFileName = this->fileNameBase->Text + ".ulg";
 
 						upStat = "Updating DM communication for step " + gcnew String(std::to_string(curStep + 1).c_str());
 						this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 						// UPDATE CAMERA COMMUNICATION DOCUMENT
-						dmCommWriter.WriteData("X:\\TestFile\\InputFileTest.txt", msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::string(units), std::to_string(curStep + 1), msclr::interop::marshal_as<std::string>(delayText));
+						dmCommWriter.WriteData("X:\\TestFile\\InputFileTest.txt", msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::string(units), std::to_string(curScanStep + 1), msclr::interop::marshal_as<std::string>(delayText), std::to_string(curScan));
 
 						upStat = "Updating ULG file for step " + gcnew String(std::to_string(curStep + 1).c_str());
 						this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 
 						// UPDATE ULG
-						ulgWriter.WriteData(msclr::interop::marshal_as<std::string>(ulgFileName), msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::to_string(totPoints), std::to_string(curStep + 1), std::to_string(curDelay), msclr::interop::marshal_as<std::string>(curFileName), curStep + 1);
+						ulgWriter.WriteData(msclr::interop::marshal_as<std::string>(ulgFileName), msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::to_string(totPoints), std::to_string(curStep + 1), std::to_string(curDelay), std::to_string(curScan), std::to_string(curScanStep + 1),  msclr::interop::marshal_as<std::string>(curFileName), curStep + 1);
 
 						upStat = "Waiting to see image name " + curFileTot + " for step " + gcnew String(std::to_string(curStep + 1).c_str());
 						this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
@@ -1875,20 +1913,27 @@ namespace UEMtamaton {
 						delayText = gcnew String(std::to_string((int)curDelay).c_str());
 					}
 
-					curFileName = this->fileNameBase->Text + "_0_" + gcnew String(std::to_string(curStep + 1).c_str()) + "_" + delayText + gcnew String(units) + ".dm4";
+					curScanStep = curStep % totPoints; // current step in the scan
+
+					if ((curStep + 1) > totPoints)
+					{
+						curScan = (curStep - curScanStep) / totPoints; // declares the current scan number (begins at zero and increments upwards)
+					}
+
+					curFileName = this->fileNameBase->Text + "_" + gcnew String(std::to_string(curScan).c_str()) + "_" + gcnew String(std::to_string(curStep + 1).c_str()) + "_" + delayText + gcnew String(units) + ".dm4";
 					curFileTot = this->fileSavePath->Text + "\\" + curFileName;
 					ulgFileName = this->fileSavePath->Text + "\\" + this->fileNameBase->Text + ".ulg";
 					
 					upStat = "Updating DM communication for step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\n";
 					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
-					// UPDATE CAMERA COMMUNICATION DOCUMENT 
-					dmCommWriter.WriteData("X:\\TestFile\\InputFileTest.txt", msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::string(units), std::to_string(curStep+1), msclr::interop::marshal_as<std::string>(delayText));
+					// UPDATE CAMERA COMMUNICATION DOCUMENT
+					dmCommWriter.WriteData("X:\\TestFile\\InputFileTest.txt", msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::string(units), std::to_string(curScanStep + 1), msclr::interop::marshal_as<std::string>(delayText), std::to_string(curScan));
 
-					upStat = "Updating ULG file for step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\n";
+					upStat = "Updating ULG file for step " + gcnew String(std::to_string(curStep + 1).c_str());
 					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 
 					// UPDATE ULG
-					ulgWriter.WriteData(msclr::interop::marshal_as<std::string>(ulgFileName), msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::to_string(totPoints), std::to_string(curStep+1), std::to_string(curDelay), msclr::interop::marshal_as<std::string>(curFileName), curStep+1);
+					ulgWriter.WriteData(msclr::interop::marshal_as<std::string>(ulgFileName), msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::to_string(totPoints), std::to_string(curStep + 1), std::to_string(curDelay), std::to_string(curScan), std::to_string(curScanStep + 1), msclr::interop::marshal_as<std::string>(curFileName), curStep + 1);
 
 					upStat = "Waiting to see image name " + curFileTot + " for step " + gcnew String(std::to_string(curStep + 1).c_str());
 					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
@@ -1938,7 +1983,7 @@ namespace UEMtamaton {
 
 				memset(cc_buffer, 0, sizeof(cc_buffer));
 
-			} while (curStep < totPoints);
+			} while (curStep < totImages);
 
 			cc_buffer[0] = '0';
 			cc_buffer[1] = '\0';
@@ -2167,6 +2212,9 @@ namespace UEMtamaton {
 
 		}
 
+		/* DelayMovBack_Click
+			Moves the delay stage while the [backward] button is pressed
+		*/
 		private: System::Void DelayMovBack_Click(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) 
 		{
 
@@ -2178,6 +2226,9 @@ namespace UEMtamaton {
 
 		}
 
+		/* DelayMovBack_Unclick
+			Stops moving the delay stage when the mouse button on the [backward] button is released
+		*/
 		private: System::Void DelayMovBack_Unclick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
 		{
 
@@ -2188,6 +2239,9 @@ namespace UEMtamaton {
 
 		}
 
+		/* DelayMovFor_Click
+			Moves the delay stage while the [forward] button is pressed
+		*/
 		private: System::Void DelayMovFor_Click(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) 
 		{
 
@@ -2199,6 +2253,9 @@ namespace UEMtamaton {
 
 		}
 
+		/* DelayMovFor_Unclick
+			Stops moving the delay stage when the mouse button on the [forward] button is released
+		*/
 		private: System::Void DelayMovFor_Unclick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
 		{
 
@@ -2209,6 +2266,13 @@ namespace UEMtamaton {
 
 		}
 
+		/* DelayValueUpdater_DoWork and associated delegate functions
+			Handles all the work for updating the delay stage value on the delay stage side.
+
+			delDistUpdater-distDelUpdater delegate pair: updates the position of the delay stage
+			delTimeUpdater-timeDelUpdater delegate pair: updates the time value
+			killDelUpdater-delKillUpdater delegate pair: kills the updater if there is an issue with Soloist
+		*/
 		delegate System::Void delDistUpdater();
 		System::Void distDelUpdater()
 		{
@@ -2239,6 +2303,14 @@ namespace UEMtamaton {
 				this->BeginInvoke(gcnew delTimeUpdater(this, &UEMAuto::timeDelUpdater));
 				System::Threading::Thread::Sleep(100);
 			}
+
+		}
+
+		private: System::Void RepeatBox_TextChanged(System::Object^ sender, System::EventArgs^ e) 
+		{
+
+			repeatValue = std::stoi((msclr::interop::marshal_as<std::string>(this->RepeatBox->Text).c_str())); // casts the value in RepeatBox to int
+			this->RepeatBox->Text = gcnew String(std::to_string(repeatValue).c_str()); // sets the value in RepeatBox to repeatValue. Defensively protects against invalid values by displaying incorrectly typed values as their ASCII to numerical conversion.
 
 		}
 };
