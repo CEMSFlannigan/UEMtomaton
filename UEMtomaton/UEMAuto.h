@@ -22,6 +22,7 @@
 #include <filesystem>
 #include "WriteULG.h"
 #include "WriteDMComm.h"
+#include "WriteSettings.h"
 #include "Soloist.h"
 
 /* -------------------------------GLOBAL VARIABLE DECLARATIONS-------------------------------------- */
@@ -93,15 +94,75 @@ namespace UEMtomaton {
 		{
 			InitializeComponent();
 
-			spdlght = 299792458;
-			mm_to_fs = 1e12 / spdlght / 1000 / 2;
-			curZero = 293.527; /// mm
+			spdlght = 299792458; // m/s
+			mm_to_fs = 1e12 / spdlght / 1000 / 2; // mm/ps, include factor of 2 to account for retroreflector
 			units[0] = 'p'; // initialize with ps
 			units[1] = 's';
 			designation = -1; // to tell either side that no designation has been assigned yet.
 			runStat = 0; // set default value of runStat
 			repeatValue = 0; // set default value of repeatValue
 			timeLeft = 0; // set the estimated time left to zero
+
+			std::string acqTimeZero;
+			std::string acqSpeed;
+			std::string acqIP;
+
+			std::ifstream OpenFile;
+
+			std::string line;
+			int curLine = 0;
+
+			OpenFile.open("UEMtomatonConfig.txt");
+
+			if (OpenFile)
+			{
+
+				do
+				{
+
+					getline(OpenFile, line);
+
+					if (curLine == 0)
+					{
+						acqTimeZero = line;
+						curLine = 1;
+					}
+					else if (curLine == 1)
+					{
+						acqSpeed = line;
+						curLine = 2;
+					}
+					else if (curLine == 2)
+					{
+						acqIP = line;
+					}
+
+				} while (!OpenFile.eof());
+
+				curZero = std::stod(acqTimeZero);
+				this->delaySpeedSetting->Text = gcnew String(acqSpeed.c_str());
+				this->delaySpd->Text = this->delaySpeedSetting->Text;
+				this->DelayIPSetting->Text = gcnew String(acqIP.c_str());
+				this->servIP->Text = this->DelayIPSetting->Text;
+
+			}
+			else
+			{
+
+				curZero = 293.527; /// mm
+
+				this->delaySpeedSetting->Text = gcnew String("50");
+				this->delaySpd->Text = this->delaySpeedSetting->Text;
+				this->DelayIPSetting->Text = gcnew String("192.168.0.3");
+				this->servIP->Text = this->DelayIPSetting->Text;
+
+				String^ upStat = gcnew String("UEMtomatonConfig.txt not found. Settings set to default values.\r\n");
+				this->camStat->AppendText(upStat);
+
+			}
+
+			OpenFile.close();
+
 		}
 
 	protected:
@@ -218,6 +279,25 @@ namespace UEMtomaton {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ delayStatus;
 private: System::Windows::Forms::TextBox^ RepeatBox;
 private: System::Windows::Forms::Label^ RepeatLabel;
+private: System::Windows::Forms::TabPage^ tabPage1;
+
+
+private: System::Windows::Forms::Label^ label5;
+private: System::Windows::Forms::TextBox^ DelayIPSetting;
+
+private: System::Windows::Forms::GroupBox^ GeneralSettingsBox;
+private: System::Windows::Forms::TextBox^ timeZeroPositionSetting;
+
+private: System::Windows::Forms::Label^ label16;
+private: System::Windows::Forms::GroupBox^ DelaySettingsBox;
+private: System::Windows::Forms::Label^ label15;
+private: System::Windows::Forms::TextBox^ delaySpeedSetting;
+
+private: System::Windows::Forms::GroupBox^ CameraSettingsBox;
+private: System::Windows::Forms::Button^ loadSettingsButton;
+
+private: System::Windows::Forms::Button^ DefaultSettingsRestore;
+private: System::Windows::Forms::Button^ SaveSettingsButton;
 
 
 
@@ -240,6 +320,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(UEMAuto::typeid));
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->BottomToolStripPanel = (gcnew System::Windows::Forms::ToolStripPanel());
@@ -298,6 +379,19 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			this->delayMovFor = (gcnew System::Windows::Forms::Button());
 			this->delayMovBack = (gcnew System::Windows::Forms::Button());
 			this->ServInitButton = (gcnew System::Windows::Forms::Button());
+			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
+			this->loadSettingsButton = (gcnew System::Windows::Forms::Button());
+			this->DefaultSettingsRestore = (gcnew System::Windows::Forms::Button());
+			this->SaveSettingsButton = (gcnew System::Windows::Forms::Button());
+			this->GeneralSettingsBox = (gcnew System::Windows::Forms::GroupBox());
+			this->timeZeroPositionSetting = (gcnew System::Windows::Forms::TextBox());
+			this->label16 = (gcnew System::Windows::Forms::Label());
+			this->DelaySettingsBox = (gcnew System::Windows::Forms::GroupBox());
+			this->label15 = (gcnew System::Windows::Forms::Label());
+			this->delaySpeedSetting = (gcnew System::Windows::Forms::TextBox());
+			this->CameraSettingsBox = (gcnew System::Windows::Forms::GroupBox());
+			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->DelayIPSetting = (gcnew System::Windows::Forms::TextBox());
 			this->trackTime = (gcnew System::ComponentModel::BackgroundWorker());
 			this->curTime = (gcnew System::Windows::Forms::Label());
 			this->delayComm = (gcnew System::ComponentModel::BackgroundWorker());
@@ -310,6 +404,10 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->TimePoints))->BeginInit();
 			this->delayTab->SuspendLayout();
 			this->groupBox1->SuspendLayout();
+			this->tabPage1->SuspendLayout();
+			this->GeneralSettingsBox->SuspendLayout();
+			this->DelaySettingsBox->SuspendLayout();
+			this->CameraSettingsBox->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// label1
@@ -363,6 +461,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			// 
 			this->cameraTab->Controls->Add(this->tabPage2);
 			this->cameraTab->Controls->Add(this->delayTab);
+			this->cameraTab->Controls->Add(this->tabPage1);
 			this->cameraTab->Location = System::Drawing::Point(16, 53);
 			this->cameraTab->Name = L"cameraTab";
 			this->cameraTab->SelectedIndex = 0;
@@ -415,7 +514,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			this->RepeatBox->Size = System::Drawing::Size(33, 20);
 			this->RepeatBox->TabIndex = 24;
 			this->RepeatBox->Text = L"0";
-			this->RepeatBox->TextChanged += gcnew System::EventHandler(this, &UEMAuto::RepeatBox_TextChanged);
+			this->RepeatBox->LostFocus += gcnew System::EventHandler(this, &UEMAuto::RepeatBox_TextChanged);
 			// 
 			// RepeatLabel
 			// 
@@ -456,6 +555,15 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			this->DataReadouts->Location = System::Drawing::Point(194, 211);
 			this->DataReadouts->Name = L"DataReadouts";
 			this->DataReadouts->ReadOnly = true;
+			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			dataGridViewCellStyle3->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle3->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle3->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle3->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->DataReadouts->RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
 			this->DataReadouts->Size = System::Drawing::Size(575, 223);
 			this->DataReadouts->TabIndex = 8;
 			// 
@@ -559,26 +667,26 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			// 
 			this->TimePoints->AllowUserToAddRows = false;
 			this->TimePoints->AllowUserToDeleteRows = false;
-			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
-				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle3->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle3->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle3->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle3->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->TimePoints->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
-			this->TimePoints->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->TimePoints->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(1) { this->TimepointList });
 			dataGridViewCellStyle4->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle4->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle4->BackColor = System::Drawing::SystemColors::Control;
 			dataGridViewCellStyle4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle4->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle4->ForeColor = System::Drawing::SystemColors::WindowText;
 			dataGridViewCellStyle4->SelectionBackColor = System::Drawing::SystemColors::Highlight;
 			dataGridViewCellStyle4->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle4->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
-			this->TimePoints->DefaultCellStyle = dataGridViewCellStyle4;
+			dataGridViewCellStyle4->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->TimePoints->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+			this->TimePoints->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->TimePoints->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(1) { this->TimepointList });
+			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle5->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
+			this->TimePoints->DefaultCellStyle = dataGridViewCellStyle5;
 			this->TimePoints->Location = System::Drawing::Point(18, 211);
 			this->TimePoints->Name = L"TimePoints";
 			this->TimePoints->ReadOnly = true;
@@ -708,6 +816,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			this->camStat->Location = System::Drawing::Point(18, 443);
 			this->camStat->Multiline = true;
 			this->camStat->Name = L"camStat";
+			this->camStat->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
 			this->camStat->Size = System::Drawing::Size(751, 85);
 			this->camStat->TabIndex = 5;
 			this->camStat->Text = L"Status Bar:\r\n";
@@ -914,6 +1023,139 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			this->ServInitButton->UseVisualStyleBackColor = true;
 			this->ServInitButton->Click += gcnew System::EventHandler(this, &UEMAuto::ServInitButton_Click);
 			// 
+			// tabPage1
+			// 
+			this->tabPage1->Controls->Add(this->loadSettingsButton);
+			this->tabPage1->Controls->Add(this->DefaultSettingsRestore);
+			this->tabPage1->Controls->Add(this->SaveSettingsButton);
+			this->tabPage1->Controls->Add(this->GeneralSettingsBox);
+			this->tabPage1->Controls->Add(this->DelaySettingsBox);
+			this->tabPage1->Controls->Add(this->CameraSettingsBox);
+			this->tabPage1->Location = System::Drawing::Point(4, 22);
+			this->tabPage1->Name = L"tabPage1";
+			this->tabPage1->Padding = System::Windows::Forms::Padding(3);
+			this->tabPage1->Size = System::Drawing::Size(788, 584);
+			this->tabPage1->TabIndex = 2;
+			this->tabPage1->Text = L"Settings";
+			this->tabPage1->UseVisualStyleBackColor = true;
+			// 
+			// loadSettingsButton
+			// 
+			this->loadSettingsButton->Location = System::Drawing::Point(6, 470);
+			this->loadSettingsButton->Name = L"loadSettingsButton";
+			this->loadSettingsButton->Size = System::Drawing::Size(108, 51);
+			this->loadSettingsButton->TabIndex = 14;
+			this->loadSettingsButton->Text = L"Reload Settings";
+			this->loadSettingsButton->UseVisualStyleBackColor = true;
+			this->loadSettingsButton->Click += gcnew System::EventHandler(this, &UEMAuto::loadSettingsButton_Click);
+			// 
+			// DefaultSettingsRestore
+			// 
+			this->DefaultSettingsRestore->Location = System::Drawing::Point(6, 527);
+			this->DefaultSettingsRestore->Name = L"DefaultSettingsRestore";
+			this->DefaultSettingsRestore->Size = System::Drawing::Size(108, 51);
+			this->DefaultSettingsRestore->TabIndex = 13;
+			this->DefaultSettingsRestore->Text = L"Restore Defaults";
+			this->DefaultSettingsRestore->UseVisualStyleBackColor = true;
+			this->DefaultSettingsRestore->Click += gcnew System::EventHandler(this, &UEMAuto::DefaultSettingsRestore_Click);
+			// 
+			// SaveSettingsButton
+			// 
+			this->SaveSettingsButton->Location = System::Drawing::Point(683, 527);
+			this->SaveSettingsButton->Name = L"SaveSettingsButton";
+			this->SaveSettingsButton->Size = System::Drawing::Size(99, 51);
+			this->SaveSettingsButton->TabIndex = 12;
+			this->SaveSettingsButton->Text = L"Save Settings";
+			this->SaveSettingsButton->UseVisualStyleBackColor = true;
+			this->SaveSettingsButton->Click += gcnew System::EventHandler(this, &UEMAuto::SaveSettingsButton_Click);
+			// 
+			// GeneralSettingsBox
+			// 
+			this->GeneralSettingsBox->Controls->Add(this->timeZeroPositionSetting);
+			this->GeneralSettingsBox->Controls->Add(this->label16);
+			this->GeneralSettingsBox->Location = System::Drawing::Point(15, 73);
+			this->GeneralSettingsBox->Name = L"GeneralSettingsBox";
+			this->GeneralSettingsBox->Size = System::Drawing::Size(275, 50);
+			this->GeneralSettingsBox->TabIndex = 10;
+			this->GeneralSettingsBox->TabStop = false;
+			this->GeneralSettingsBox->Text = L"General Settings";
+			// 
+			// timeZeroPositionSetting
+			// 
+			this->timeZeroPositionSetting->Location = System::Drawing::Point(175, 19);
+			this->timeZeroPositionSetting->Name = L"timeZeroPositionSetting";
+			this->timeZeroPositionSetting->Size = System::Drawing::Size(94, 20);
+			this->timeZeroPositionSetting->TabIndex = 7;
+			this->timeZeroPositionSetting->Text = L"293.527";
+			this->timeZeroPositionSetting->LostFocus += gcnew System::EventHandler(this, &UEMAuto::timeZeroPositionSetting_TextChanged);
+			// 
+			// label16
+			// 
+			this->label16->AutoSize = true;
+			this->label16->Location = System::Drawing::Point(6, 22);
+			this->label16->Name = L"label16";
+			this->label16->Size = System::Drawing::Size(151, 13);
+			this->label16->TabIndex = 6;
+			this->label16->Text = L"True Time Zero Position (mm): ";
+			// 
+			// DelaySettingsBox
+			// 
+			this->DelaySettingsBox->Controls->Add(this->label15);
+			this->DelaySettingsBox->Controls->Add(this->delaySpeedSetting);
+			this->DelaySettingsBox->Location = System::Drawing::Point(296, 17);
+			this->DelaySettingsBox->Name = L"DelaySettingsBox";
+			this->DelaySettingsBox->Size = System::Drawing::Size(138, 50);
+			this->DelaySettingsBox->TabIndex = 9;
+			this->DelaySettingsBox->TabStop = false;
+			this->DelaySettingsBox->Text = L"Delay Stage Settings";
+			// 
+			// label15
+			// 
+			this->label15->AutoSize = true;
+			this->label15->Location = System::Drawing::Point(6, 22);
+			this->label15->Name = L"label15";
+			this->label15->Size = System::Drawing::Size(78, 13);
+			this->label15->TabIndex = 5;
+			this->label15->Text = L"Default Speed:";
+			// 
+			// delaySpeedSetting
+			// 
+			this->delaySpeedSetting->Location = System::Drawing::Point(96, 19);
+			this->delaySpeedSetting->Name = L"delaySpeedSetting";
+			this->delaySpeedSetting->Size = System::Drawing::Size(36, 20);
+			this->delaySpeedSetting->TabIndex = 4;
+			this->delaySpeedSetting->Text = L"50";
+			this->delaySpeedSetting->TextChanged += gcnew System::EventHandler(this, &UEMAuto::delaySpeedSetting_TextChanged);
+			// 
+			// CameraSettingsBox
+			// 
+			this->CameraSettingsBox->Controls->Add(this->label5);
+			this->CameraSettingsBox->Controls->Add(this->DelayIPSetting);
+			this->CameraSettingsBox->Location = System::Drawing::Point(15, 17);
+			this->CameraSettingsBox->Name = L"CameraSettingsBox";
+			this->CameraSettingsBox->Size = System::Drawing::Size(275, 50);
+			this->CameraSettingsBox->TabIndex = 8;
+			this->CameraSettingsBox->TabStop = false;
+			this->CameraSettingsBox->Text = L"Camera Settings";
+			// 
+			// label5
+			// 
+			this->label5->AutoSize = true;
+			this->label5->Location = System::Drawing::Point(6, 22);
+			this->label5->Name = L"label5";
+			this->label5->Size = System::Drawing::Size(132, 13);
+			this->label5->TabIndex = 5;
+			this->label5->Text = L"Delay Stage Computer IP: ";
+			// 
+			// DelayIPSetting
+			// 
+			this->DelayIPSetting->Location = System::Drawing::Point(169, 19);
+			this->DelayIPSetting->Name = L"DelayIPSetting";
+			this->DelayIPSetting->Size = System::Drawing::Size(100, 20);
+			this->DelayIPSetting->TabIndex = 4;
+			this->DelayIPSetting->Text = L"192.168.0.3";
+			this->DelayIPSetting->TextChanged += gcnew System::EventHandler(this, &UEMAuto::DelayIPSetting_TextChanged);
+			// 
 			// trackTime
 			// 
 			this->trackTime->WorkerSupportsCancellation = true;
@@ -968,6 +1210,13 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			this->delayTab->PerformLayout();
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
+			this->tabPage1->ResumeLayout(false);
+			this->GeneralSettingsBox->ResumeLayout(false);
+			this->GeneralSettingsBox->PerformLayout();
+			this->DelaySettingsBox->ResumeLayout(false);
+			this->DelaySettingsBox->PerformLayout();
+			this->CameraSettingsBox->ResumeLayout(false);
+			this->CameraSettingsBox->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -985,7 +1234,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 		{
 
 			// Update the user on beginning initialization
-			String^ upStat = gcnew String("Initializing server...\n");
+			String^ upStat = gcnew String("Initializing server...\r\n");
 			this->statusWindow->AppendText(upStat);
 
 			// standard server startup code --> search Berkeley sockets or c++ sockets for more information
@@ -1008,7 +1257,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			listen(cc_server, 0);
 
 			// Update the user on listening for the connection to the delay value client and run client
-			upStat = gcnew String("Listening for incoming connections on ports 6666 and 6667...\n");
+			upStat = gcnew String("Listening for incoming connections on ports 6666 and 6667...\r\n");
 			this->statusWindow->AppendText(upStat);
 
 			dc_clientAddrSize = sizeof(dc_clientAddr);
@@ -1017,19 +1266,20 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			// Connect to the delay value client
 			if ((delaycomm_client = accept(dc_server, (SOCKADDR*)& dc_clientAddr, &dc_clientAddrSize)) != INVALID_SOCKET)
 			{
-				upStat = gcnew String("Delay data transferring.\n");
+				upStat = gcnew String("Delay data transferring.\r\n");
 				this->statusWindow->AppendText(upStat);
 			}
 
 			// Connect to the camera run status client
 			if ((camcomm_client = accept(cc_server, (SOCKADDR*)& cc_clientAddr, &cc_clientAddrSize)) != INVALID_SOCKET)
 			{
-				upStat = gcnew String("Camera data communicating.\n");
+				upStat = gcnew String("Camera data communicating.\r\n");
 				this->statusWindow->AppendText(upStat);
 			}
 
 			this->trackTime->RunWorkerAsync();
 
+			/*
 			if (!SoloistConnect(&handles, &handleCount))
 			{
 				this->statusWindow->AppendText("No controllers found.\n");
@@ -1050,7 +1300,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 				cleanupSoloist();
 				return;
 			}
-
+			*/
 			this->scanRunner->RunWorkerAsync(); // run the scan-thread
 			this->delayValueUpdater->RunWorkerAsync();
 	
@@ -1079,14 +1329,14 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 		{
 
 			// Update the user on making timepoints sub-program.
-			String^ upStat = gcnew String("Started MakeTimepoints.exe.\n");
+			String^ upStat = gcnew String("Started MakeTimepoints.exe.\r\n");
 			this->statusWindow->AppendText(upStat);
 
 			// Spawns the .exe
 			spawnl(P_WAIT, "MakeTimepoints.exe", "MakeTimepoints.exe", NULL);
 
 			// Grabs the time points from the program.
-			upStat = gcnew String("Grabbing timepoints.\n");
+			upStat = gcnew String("Grabbing timepoints.\r\n");
 			this->statusWindow->AppendText(upStat);
 
 			std::ifstream OpenFile;
@@ -1235,7 +1485,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 					this->TimePoints->Rows->Add(timeAdd);
 				}
 
-				String^ upStat = gcnew String("Randomized timepoints.\n");
+				String^ upStat = gcnew String("Randomized timepoints.\r\n");
 				this->statusWindow->AppendText(upStat);
 
 			}
@@ -1250,7 +1500,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 					this->TimePoints->Rows->Add(timeAdd);
 				}
 
-				String^ upStat = gcnew String("Unandomized timepoints.\n");
+				String^ upStat = gcnew String("Unandomized timepoints.\r\n");
 				this->statusWindow->AppendText(upStat);
 			}
 
@@ -1272,7 +1522,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 				printSoloistError();
 			}
 
-			String^ upStat = gcnew String("Server shutdown.\n");
+			String^ upStat = gcnew String("Server shutdown.\r\n");
 			this->statusWindow->AppendText(upStat);
 
 			this->trackTime->CancelAsync();
@@ -1500,7 +1750,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			servAddrSize = sizeof(cc_addr);
 			connect(cc_server, (SOCKADDR*)& cc_addr, sizeof(cc_addr));
 
-			String^ upStat = gcnew String("Connected to server!\n");
+			String^ upStat = gcnew String("Connected to server!\r\n");
 			this->camStat->AppendText(upStat);
 
 			this->delayComm->RunWorkerAsync();
@@ -1516,7 +1766,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			closesocket(dc_server);
 			closesocket(cc_server);
 			WSACleanup();
-			String^ upStat = gcnew String("Socket closed.\n");
+			String^ upStat = gcnew String("Socket closed.\r\n");
 			this->camStat->AppendText(upStat);
 			this->cameraRunner->CancelAsync();
 			this->delayComm->CancelAsync();
@@ -1568,7 +1818,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 		delegate System::Void upEstTime(double timePer, int curStep);
 		System::Void upTimeEst(double timePer, int curStep)
 		{
-			timeLeft = round(timePer * (totPoints - curStep));
+			timeLeft = round(timePer * (totPoints*repeatValue - curStep));
 			this->timeRemLab->Text = gcnew String(std::to_string((int)timeLeft).c_str()) + " sec";
 		}
 		void SetForegroundWindowInternal(HWND hWnd)
@@ -1708,7 +1958,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 			}
 			else
 			{
-				upStat = gcnew String("DM was not found.\n");
+				upStat = gcnew String("DM was not found.\r\n");
 				this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 			}
 
@@ -1717,7 +1967,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 
 				if (WSAGetLastError() == 10054)
 				{
-					upStat = gcnew String("Network error.\n");
+					upStat = gcnew String("Network error.\r\n");
 
 					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 
@@ -1735,7 +1985,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 					{
 						firstPause = 1;
 
-						upStat = "Resumed on step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\n";
+						upStat = "Resumed on step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\r\n";
 						this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 					}
 
@@ -1750,7 +2000,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 						stepString = gcnew String(std::to_string(curScanStep + 1).c_str());
 						timeString = gcnew String(std::to_string(curTimePoint).c_str());
 						posString = gcnew String(std::to_string(curDistPoint).c_str());
-						statString = "Moving delay stage...";
+						statString = "Moving delay stage...\r\n";
 
 						this->BeginInvoke(gcnew AddDelRunGridRow(this, &UEMAuto::DelGridRowAdd), stepString, timeString, posString, statString);
 
@@ -1774,7 +2024,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 
 						memset(cc_buffer, 0, sizeof(cc_buffer));
 
-						statString = "Acquiring...";
+						statString = "Acquiring...\r\n";
 						this->BeginInvoke(gcnew DelRunGridRowUp(this, &UEMAuto::DelGridRowUp), statString);
 
 						recvSignal = 0;
@@ -1811,29 +2061,22 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 							delayText = gcnew String(std::to_string((int)curDelay).c_str());
 						}
 
-						curScanStep = curStep % totPoints; // current step in the scan
-
-						if ((curStep + 1) > totPoints)
-						{
-							curScan = (curStep - curScanStep) / totPoints; // declares the current scan number (begins at zero and increments upwards)
-						}
-
 						curFileName = this->fileNameBase->Text + "_" + gcnew String(std::to_string(curScan).c_str()) + "_" + gcnew String(std::to_string(curScanStep + 1).c_str()) + "_" + delayText + gcnew String(units) + ".dm4";
 						curFileTot = this->fileSavePath->Text + "\\" + curFileName;
 						ulgFileName = this->fileNameBase->Text + ".ulg";
 
-						upStat = "Updating DM communication for step " + gcnew String(std::to_string(curStep + 1).c_str());
+						upStat = "Updating DM communication for step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\r\n";
 						this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 						// UPDATE CAMERA COMMUNICATION DOCUMENT
 						dmCommWriter.WriteData("X:\\TestFile\\InputFileTest.txt", msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::string(units), std::to_string(curScanStep + 1), msclr::interop::marshal_as<std::string>(delayText), std::to_string(curScan));
 
-						upStat = "Updating ULG file for step " + gcnew String(std::to_string(curStep + 1).c_str());
+						upStat = "Updating ULG file for step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\r\n";
 						this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 
 						// UPDATE ULG
 						ulgWriter.WriteData(msclr::interop::marshal_as<std::string>(ulgFileName), msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::to_string(totPoints), std::to_string(curStep + 1), std::to_string(curDelay), std::to_string(curScan), std::to_string(curScanStep + 1),  msclr::interop::marshal_as<std::string>(curFileName), curStep + 1);
 
-						upStat = "Waiting to see image name " + curFileTot + " for step " + gcnew String(std::to_string(curStep + 1).c_str());
+						upStat = "Waiting to see image name " + curFileTot + " for step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\r\n";
 						this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 
 						fileFound = 0;
@@ -1863,6 +2106,13 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 
 						curStep++;
 
+						curScanStep = curStep % totPoints; // current step in the scan
+
+						if ((curStep + 1) > totPoints)
+						{
+							curScan = (curStep - curScanStep) / totPoints; // declares the current scan number (begins at zero and increments upwards)
+						}
+
 						timeTrack = DateTime::Now;
 
 						addTime = timeTrack - timeInit;
@@ -1877,7 +2127,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 					{
 						if (firstPause == 1)
 						{
-							upStat = "Paused on step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\n";
+							upStat = "Paused on step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\r\n";
 							this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 							firstPause = 0;
 						}
@@ -1888,7 +2138,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 				{
 					// Stop signal, stops and clears everything.
 
-					upStat = "Stopped on step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\n";
+					upStat = "Stopped on step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\r\n";
 
 					curStep = totPoints;
 
@@ -1913,29 +2163,44 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 						delayText = gcnew String(std::to_string((int)curDelay).c_str());
 					}
 
-					curScanStep = curStep % totPoints; // current step in the scan
+					/*
+					upStat = gcnew String(std::to_string(curDelay).c_str()) + "\r\n\0";
 
-					if ((curStep + 1) > totPoints)
-					{
-						curScan = (curStep - curScanStep) / totPoints; // declares the current scan number (begins at zero and increments upwards)
-					}
+					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
+
+					upStat = gcnew String(std::to_string(totPoints).c_str()) + "\r\n\0";
+
+					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
+
+					upStat = gcnew String(std::to_string(totImages).c_str()) + "\r\n\0";
+
+					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
+
+					upStat = gcnew String(std::to_string(curStep).c_str()) + "\r\n\0";
+
+					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
+
+					upStat = gcnew String(std::to_string(curScanStep).c_str()) + "\r\n\0";
+
+					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
+					*/
 
 					curFileName = this->fileNameBase->Text + "_" + gcnew String(std::to_string(curScan).c_str()) + "_" + gcnew String(std::to_string(curStep + 1).c_str()) + "_" + delayText + gcnew String(units) + ".dm4";
 					curFileTot = this->fileSavePath->Text + "\\" + curFileName;
 					ulgFileName = this->fileSavePath->Text + "\\" + this->fileNameBase->Text + ".ulg";
 					
-					upStat = "Updating DM communication for step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\n";
+					upStat = "Updating DM communication for step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\r\n";
 					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 					// UPDATE CAMERA COMMUNICATION DOCUMENT
 					dmCommWriter.WriteData("X:\\TestFile\\InputFileTest.txt", msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::string(units), std::to_string(curScanStep + 1), msclr::interop::marshal_as<std::string>(delayText), std::to_string(curScan));
 
-					upStat = "Updating ULG file for step " + gcnew String(std::to_string(curStep + 1).c_str());
+					upStat = "Updating ULG file for step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\r\n";
 					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 
 					// UPDATE ULG
 					ulgWriter.WriteData(msclr::interop::marshal_as<std::string>(ulgFileName), msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::to_string(totPoints), std::to_string(curStep + 1), std::to_string(curDelay), std::to_string(curScan), std::to_string(curScanStep + 1), msclr::interop::marshal_as<std::string>(curFileName), curStep + 1);
 
-					upStat = "Waiting to see image name " + curFileTot + " for step " + gcnew String(std::to_string(curStep + 1).c_str());
+					upStat = "Waiting to see image name " + curFileTot + " for step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\r\n";
 					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 
 					fileFound = 0;
@@ -1969,6 +2234,13 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 					this->BeginInvoke(gcnew upDelRunProg(this, &UEMAuto::upDelProgRun), curStep);
 
 					curStep++;
+
+					curScanStep = curStep % totPoints; // current step in the scan
+
+					if ((curStep + 1) > totPoints)
+					{
+						curScan = (curStep - curScanStep) / totPoints; // declares the current scan number (begins at zero and increments upwards)
+					}
 
 					timeTrack = DateTime::Now;
 
@@ -2063,6 +2335,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 					this->BeginInvoke(gcnew UpdateDelStatus(this, &UEMAuto::DelStatUpdater), gcnew String(delaydata));
 					this->BeginInvoke(gcnew UpdateDelStatus(this, &UEMAuto::DelStatUpdater), gcnew String(".\n"));
 
+					/*
 					if (!SoloistMotionMoveAbs(handle, curDistPoint, std::stod(msclr::interop::marshal_as<std::string>(this->delaySpd->Text))))
 					{
 						cleanupSoloist();
@@ -2074,7 +2347,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 							cleanupSoloist();
 						}
 					}
-
+					*/
 					System::Threading::Thread::Sleep(50);
 
 					cc_buffer[0] = '1\0';
@@ -2215,7 +2488,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 		/* DelayMovBack_Click
 			Moves the delay stage while the [backward] button is pressed
 		*/
-		private: System::Void DelayMovBack_Click(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) 
+		private: System::Void DelayMovBack_Click(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
 		{
 
 			if (!SoloistMotionFreeRun(handle, -1 * std::stod(msclr::interop::marshal_as<std::string>(this->delaySpd->Text))))
@@ -2226,9 +2499,9 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 
 		}
 
-		/* DelayMovBack_Unclick
-			Stops moving the delay stage when the mouse button on the [backward] button is released
-		*/
+			   /* DelayMovBack_Unclick
+				   Stops moving the delay stage when the mouse button on the [backward] button is released
+			   */
 		private: System::Void DelayMovBack_Unclick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
 		{
 
@@ -2239,10 +2512,10 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 
 		}
 
-		/* DelayMovFor_Click
-			Moves the delay stage while the [forward] button is pressed
-		*/
-		private: System::Void DelayMovFor_Click(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) 
+			   /* DelayMovFor_Click
+				   Moves the delay stage while the [forward] button is pressed
+			   */
+		private: System::Void DelayMovFor_Click(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
 		{
 
 			if (!SoloistMotionFreeRun(handle, std::stod(msclr::interop::marshal_as<std::string>(this->delaySpd->Text))))
@@ -2253,9 +2526,9 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 
 		}
 
-		/* DelayMovFor_Unclick
-			Stops moving the delay stage when the mouse button on the [forward] button is released
-		*/
+			   /* DelayMovFor_Unclick
+				   Stops moving the delay stage when the mouse button on the [forward] button is released
+			   */
 		private: System::Void DelayMovFor_Unclick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
 		{
 
@@ -2266,29 +2539,29 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 
 		}
 
-		/* DelayValueUpdater_DoWork and associated delegate functions
-			Handles all the work for updating the delay stage value on the delay stage side.
+			   /* DelayValueUpdater_DoWork and associated delegate functions
+				   Handles all the work for updating the delay stage value on the delay stage side.
 
-			delDistUpdater-distDelUpdater delegate pair: updates the position of the delay stage
-			delTimeUpdater-timeDelUpdater delegate pair: updates the time value
-			killDelUpdater-delKillUpdater delegate pair: kills the updater if there is an issue with Soloist
-		*/
-		delegate System::Void delDistUpdater();
-		System::Void distDelUpdater()
-		{
-			this->delayPosDist->Text = gcnew String(std::to_string(positionFeedback).c_str());
-		}
-		delegate System::Void delTimeUpdater();
-		System::Void timeDelUpdater()
-		{
-			this->delayPosTime->Text = gcnew String(std::to_string(curdelTime).c_str());
-		}
-		delegate System::Void killDelUpdater();
-		System::Void delKillUpdater()
-		{
-			this->delayValueUpdater->CancelAsync();
-		}
-		private: System::Void DelayValueUpdater_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e) 
+				   delDistUpdater-distDelUpdater delegate pair: updates the position of the delay stage
+				   delTimeUpdater-timeDelUpdater delegate pair: updates the time value
+				   killDelUpdater-delKillUpdater delegate pair: kills the updater if there is an issue with Soloist
+			   */
+			   delegate System::Void delDistUpdater();
+			   System::Void distDelUpdater()
+			   {
+				   this->delayPosDist->Text = gcnew String(std::to_string(positionFeedback).c_str());
+			   }
+			   delegate System::Void delTimeUpdater();
+			   System::Void timeDelUpdater()
+			   {
+				   this->delayPosTime->Text = gcnew String(std::to_string(curdelTime).c_str());
+			   }
+			   delegate System::Void killDelUpdater();
+			   System::Void delKillUpdater()
+			   {
+				   this->delayValueUpdater->CancelAsync();
+			   }
+		private: System::Void DelayValueUpdater_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e)
 		{
 
 			while (true)
@@ -2298,7 +2571,7 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 					this->BeginInvoke(gcnew killDelUpdater(this, &UEMAuto::delKillUpdater));
 					cleanupSoloist();
 				}
-				curdelTime = (((positionFeedback - curZero) / 1000) / spdlght) * 1e12;
+				curdelTime = (positionFeedback - curZero) * mm_to_fs;
 				this->BeginInvoke(gcnew delDistUpdater(this, &UEMAuto::distDelUpdater));
 				this->BeginInvoke(gcnew delTimeUpdater(this, &UEMAuto::timeDelUpdater));
 				System::Threading::Thread::Sleep(100);
@@ -2306,17 +2579,146 @@ private: System::Windows::Forms::Label^ RepeatLabel;
 
 		}
 
-		private: System::Void RepeatBox_TextChanged(System::Object^ sender, System::EventArgs^ e) 
+		private: System::Void RepeatBox_TextChanged(System::Object^ sender, System::EventArgs^ e)
 		{
 
-			repeatValue = std::stoi((msclr::interop::marshal_as<std::string>(this->RepeatBox->Text).c_str())); // casts the value in RepeatBox to int
-			if (repeatValue < 0)
+			
+			if (System::String::IsNullOrEmpty(this->RepeatBox->Text))
 			{
 				repeatValue = 0;
 			}
+			else
+			{
+				repeatValue = std::stoi((msclr::interop::marshal_as<std::string>(this->RepeatBox->Text).c_str())); // casts the value in RepeatBox to int
+				if (repeatValue < 0)
+				{
+
+					repeatValue = 0;
+				
+				}
+			}
 			this->RepeatBox->Text = gcnew String(std::to_string(repeatValue).c_str()); // sets the value in RepeatBox to repeatValue. Defensively protects against invalid values by displaying incorrectly typed values as their ASCII to numerical conversion.
+			
+		}
+
+		private: System::Void DelayIPSetting_TextChanged(System::Object^ sender, System::EventArgs^ e) 
+		{
+			
+			this->servIP->Text = this->DelayIPSetting->Text;
 
 		}
+
+		private: System::Void delaySpeedSetting_TextChanged(System::Object^ sender, System::EventArgs^ e) 
+		{
+
+			this->delaySpd->Text = this->delaySpeedSetting->Text;
+
+		}
+
+		private: System::Void timeZeroPositionSetting_TextChanged(System::Object^ sender, System::EventArgs^ e) 
+		{
+
+			if (System::String::IsNullOrEmpty(this->timeZeroPositionSetting->Text))
+			{
+				curZero = 0;
+			}
+			else
+			{
+				curZero = std::stoi((msclr::interop::marshal_as<std::string>(this->timeZeroPositionSetting->Text).c_str())); // casts the value in timeZeroPositionSetting to int
+				if (curZero < 0)
+				{
+
+					curZero = 0;
+
+				}
+			}
+			this->timeZeroPositionSetting->Text = gcnew String(std::to_string(curZero).c_str()); // sets the value in timeZeroPositionSetting to curZero. Defensively protects against invalid values by displaying incorrectly typed values as their ASCII to numerical conversion.
+
+		}
+
+		private: System::Void SaveSettingsButton_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+
+			WriteSettings writer;
+
+			std::string saveTimeZero = std::to_string(curZero);
+			std::string saveSpeed = msclr::interop::marshal_as<std::string>(this->delaySpeedSetting->Text);
+			std::string saveIP = msclr::interop::marshal_as<std::string>(this->DelayIPSetting->Text);
+
+			writer.WriteSet("UEMtomatonConfig.txt",saveTimeZero,saveSpeed,saveIP);
+
+		}
+
+		private: System::Void loadSettingsButton_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+
+			std::string acqTimeZero;
+			std::string acqSpeed;
+			std::string acqIP;
+
+			std::ifstream OpenFile;
+
+			std::string line;
+			int curLine = 0;
+
+			OpenFile.open("UEMtomatonConfig.txt");
+
+			if (OpenFile)
+			{
+
+				do
+				{
+
+					getline(OpenFile, line);
+
+					if (curLine == 0)
+					{
+						acqTimeZero = line;
+						curLine = 1;
+					}
+					else if (curLine == 1)
+					{
+						acqSpeed = line;
+						curLine = 2;
+					}
+					else if (curLine == 2)
+					{
+						acqIP = line;
+					}
+
+				} while (!OpenFile.eof());
+
+				curZero = std::stod(acqTimeZero);
+				this->delaySpeedSetting->Text = gcnew String(acqSpeed.c_str());
+				this->delaySpd->Text = this->delaySpeedSetting->Text;
+				this->DelayIPSetting->Text = gcnew String(acqIP.c_str());
+				this->servIP->Text = this->DelayIPSetting->Text;
+
+			}
+			else
+			{
+
+				String^ upStat = gcnew String("UEMtomatonConfig.txt not found. Settings unchanged.\r\n");
+				this->camStat->AppendText(upStat);
+
+			}
+
+			OpenFile.close();
+
+		}
+
+		private: System::Void DefaultSettingsRestore_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+
+			curZero = 293.527; // mm
+			this->timeZeroPositionSetting->Text = gcnew String(std::to_string(curZero).c_str());
+			this->delaySpeedSetting->Text = gcnew String("50");
+			this->delaySpd->Text = this->delaySpeedSetting->Text;
+			this->DelayIPSetting->Text = gcnew String("192.168.0.3");
+			this->servIP->Text = this->DelayIPSetting->Text;
+
+		}
+
 };
 
 }
