@@ -1279,7 +1279,6 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 
 			this->trackTime->RunWorkerAsync();
 
-			/*
 			if (!SoloistConnect(&handles, &handleCount))
 			{
 				this->statusWindow->AppendText("No controllers found.\n");
@@ -1300,7 +1299,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 				cleanupSoloist();
 				return;
 			}
-			*/
+			
 			this->scanRunner->RunWorkerAsync(); // run the scan-thread
 			this->delayValueUpdater->RunWorkerAsync();
 	
@@ -2335,7 +2334,6 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 					this->BeginInvoke(gcnew UpdateDelStatus(this, &UEMAuto::DelStatUpdater), gcnew String(delaydata));
 					this->BeginInvoke(gcnew UpdateDelStatus(this, &UEMAuto::DelStatUpdater), gcnew String(".\n"));
 
-					/*
 					if (!SoloistMotionMoveAbs(handle, curDistPoint, std::stod(msclr::interop::marshal_as<std::string>(this->delaySpd->Text))))
 					{
 						cleanupSoloist();
@@ -2347,7 +2345,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 							cleanupSoloist();
 						}
 					}
-					*/
+					
 					System::Threading::Thread::Sleep(50);
 
 					cc_buffer[0] = '1\0';
