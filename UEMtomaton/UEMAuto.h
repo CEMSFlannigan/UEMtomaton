@@ -62,7 +62,7 @@ double timeLeft; // keeps track of the time left in a run. This is an estimated
 
 double spdlght; // m/s
 double curZero; // As of August 16th, 2019 position 293.527 mm on the delay stage corresponds to 0 ps
-double mm_to_fs;
+double mm_to_ps;
 double curdelTime; // current delay position in terms of time relative to some fixed position on the delay stage
 
 char units[2]; // the units used to designate the file names and .ULG data
@@ -95,7 +95,7 @@ namespace UEMtomaton {
 			InitializeComponent();
 
 			spdlght = 299792458; // m/s
-			mm_to_fs = 1e12 / spdlght / 1000 / 2; // mm/ps, include factor of 2 to account for retroreflector
+			mm_to_ps = 1e12 / spdlght / 1000 * 2; // ps/mm, include factor of 2 to account for retroreflector
 			units[0] = 'p'; // initialize with ps
 			units[1] = 's';
 			designation = -1; // to tell either side that no designation has been assigned yet.
@@ -1994,7 +1994,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 					{
 
 						curTimePoint = expArr[curScanStep];
-						curDistPoint = curTimePoint / mm_to_fs + curZero;
+						curDistPoint = curTimePoint / mm_to_ps + curZero;
 
 						stepString = gcnew String(std::to_string(curScanStep + 1).c_str());
 						timeString = gcnew String(std::to_string(curTimePoint).c_str());
@@ -2184,7 +2184,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 					*/
 
-					curFileName = this->fileNameBase->Text + "_" + gcnew String(std::to_string(curScan).c_str()) + "_" + gcnew String(std::to_string(curStep + 1).c_str()) + "_" + delayText + gcnew String(units) + ".dm4";
+					curFileName = this->fileNameBase->Text + "_" + gcnew String(std::to_string(curScan).c_str()) + "_" + gcnew String(std::to_string(curScanStep + 1).c_str()) + "_" + delayText + gcnew String(units) + ".dm4";
 					curFileTot = this->fileSavePath->Text + "\\" + curFileName;
 					ulgFileName = this->fileSavePath->Text + "\\" + this->fileNameBase->Text + ".ulg";
 					
@@ -2328,7 +2328,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 
 					memset(cc_buffer, 0, sizeof(cc_buffer));
 
-					curDistPoint = std::stod(delaydata) / mm_to_fs + curZero;
+					curDistPoint = std::stod(delaydata) / mm_to_ps + curZero;
 
 					this->BeginInvoke(gcnew UpdateDelStatus(this, &UEMAuto::DelStatUpdater), gcnew String("Data received and moving delay stage to position "  ".\n"));
 					this->BeginInvoke(gcnew UpdateDelStatus(this, &UEMAuto::DelStatUpdater), gcnew String(delaydata));
@@ -2569,7 +2569,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 					this->BeginInvoke(gcnew killDelUpdater(this, &UEMAuto::delKillUpdater));
 					cleanupSoloist();
 				}
-				curdelTime = (positionFeedback - curZero) * mm_to_fs;
+				curdelTime = (positionFeedback - curZero) * mm_to_ps;
 				this->BeginInvoke(gcnew delDistUpdater(this, &UEMAuto::distDelUpdater));
 				this->BeginInvoke(gcnew delTimeUpdater(this, &UEMAuto::timeDelUpdater));
 				System::Threading::Thread::Sleep(100);
