@@ -1,0 +1,5 @@
+C:\Users\ddu00001\Desktop\UEMtomaton\Debug\UEMtamaton.vcxprojAssemblyReference.cache
+C:\Users\ddu00001\Desktop\UEMtomaton\Debug\UEMtomaton.UEMAuto.resources
+C:\Users\ddu00001\Desktop\UEMtomaton\Debug\UEMtamaton.vcxproj.GenerateResource.cache
+C:\Users\ddu00001\Desktop\UEMtomaton\Debug\UEMtomaton.exe
+C:\Users\ddu00001\Desktop\UEMtomaton\Debug\UEMtomaton.pdb

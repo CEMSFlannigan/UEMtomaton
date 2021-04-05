@@ -9,6 +9,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
-	UEMtamaton::UEMAuto form;
+	UEMtomaton::UEMAuto form;
 	Application::Run(% form);
 }
