@@ -20,6 +20,8 @@
 #include <Windows.h>
 #include <WinUser.h>
 #include <filesystem>
+#include <chrono>       // std::chrono::system_clock
+#include <random>       // std::default_random_engine
 #include "WriteULG.h"
 #include "WriteDMComm.h"
 #include "WriteSettings.h"
@@ -1278,7 +1280,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			}
 
 			this->trackTime->RunWorkerAsync();
-
+			
 			if (!SoloistConnect(&handles, &handleCount))
 			{
 				this->statusWindow->AppendText("No controllers found.\n");
@@ -1301,6 +1303,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			}
 			
 			this->scanRunner->RunWorkerAsync(); // run the scan-thread
+			
 			this->delayValueUpdater->RunWorkerAsync();
 	
 		}
@@ -1457,6 +1460,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 		/* RandomPoints_CheckedChanged
 			Checks if the timepoints should be randomized or not. Adjusts the time array accordingly.
 		*/
+
 		private: System::Void RandomPoints_CheckedChanged(System::Object^ sender, System::EventArgs^ e) 
 		{
 
@@ -1475,7 +1479,8 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			{
 				randomized = 1;
 
-				std::random_shuffle(&expArr[0], &expArr[tpV]);
+				unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+				std::shuffle(&expArr[0], &expArr[tpV], std::default_random_engine(seed));
 
 				for (int a = 0; a < tpV; a++)
 				{
@@ -1499,7 +1504,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 					this->TimePoints->Rows->Add(timeAdd);
 				}
 
-				String^ upStat = gcnew String("Unandomized timepoints.\r\n");
+				String^ upStat = gcnew String("Unrandomized timepoints.\r\n");
 				this->statusWindow->AppendText(upStat);
 			}
 
@@ -1817,8 +1822,27 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 		delegate System::Void upEstTime(double timePer, int curStep);
 		System::Void upTimeEst(double timePer, int curStep)
 		{
-			timeLeft = round(timePer * (totPoints*repeatValue - curStep));
+			timeLeft = round(timePer * (totPoints*(repeatValue+1) - curStep));
+			/*
+			String^ upStat = gcnew String(curStep.ToString() + "\r\n");
+			this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
+			upStat = gcnew String(repeatValue.ToString() + "\r\n");
+			this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
+			upStat = gcnew String(totPoints.ToString() + "\r\n");
+			this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
+			upStat = gcnew String(timePer.ToString() + "\r\n");
+			this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
+			*/
 			this->timeRemLab->Text = gcnew String(std::to_string((int)timeLeft).c_str()) + " sec";
+		}
+		delegate System::Void progIndicatorReset();
+		System::Void resetProgIndicators()
+		{
+			this->timeRemLab->Text = "Complete";
+			this->runProg->Minimum = 0;
+			this->runProg->Maximum = 1;
+			this->runProg->Value = 0;
+			this->runProg->Update();
 		}
 		void SetForegroundWindowInternal(HWND hWnd)
 		{
@@ -2020,9 +2044,9 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 						memset(cc_buffer, 0, sizeof(cc_buffer));
 
 						recv(cc_server, cc_buffer, sizeof(cc_buffer), 0);
-
+						
 						memset(cc_buffer, 0, sizeof(cc_buffer));
-
+						
 						statString = "Acquiring...\r\n";
 						this->BeginInvoke(gcnew DelRunGridRowUp(this, &UEMAuto::DelGridRowUp), statString);
 
@@ -2262,6 +2286,10 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			send(cc_server, cc_buffer, sizeof(cc_buffer), 0);
 			memset(cc_buffer, 0, sizeof(cc_buffer));
 
+			upStat = "Scan complete.\r\n";
+			this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
+
+			this->BeginInvoke(gcnew progIndicatorReset(this, &UEMAuto::resetProgIndicators));
 			this->BeginInvoke(gcnew delStopRun(this, &UEMAuto::stopDelRun));
 
 		}
