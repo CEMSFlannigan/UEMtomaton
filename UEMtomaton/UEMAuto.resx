@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label23.Text" xml:space="preserve">
+    <value>Set the total number of saves or total time to acquire below. 
+Editing one box will automatically update the value of the other 
+based upon the acquiusition time. Set a value of -1 in either of 
+the boxes below to have the acquisition go endlessly.</value>
+  </data>
+  <data name="label13.Text" xml:space="preserve">
+    <value>This tab is intended for selective acquisition of images in the OneView in situ mode. It is designed to allow the 
+acquisition of images at certain integer intervals of image acquisition times (such as every other, every three, etc.).
+Using this simple additional feature will begin a DM script that runs off of the information input below. Be sure to
+match acquisition times between DM and UEMtomaton.</value>
+  </data>
   <metadata name="Step.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -133,19 +145,19 @@
     <value>True</value>
   </metadata>
   <metadata name="trackTime.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
+    <value>121, 17</value>
   </metadata>
   <metadata name="delayComm.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>122, 17</value>
+    <value>226, 17</value>
   </metadata>
   <metadata name="scanRunner.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>239, 17</value>
+    <value>343, 17</value>
   </metadata>
   <metadata name="cameraRunner.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>354, 17</value>
+    <value>458, 17</value>
   </metadata>
   <metadata name="delayValueUpdater.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>484, 17</value>
+    <value>588, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

@@ -135,6 +135,7 @@
     <ClCompile Include="UEMAuto.cpp" />
     <ClCompile Include="WriteDMComm.cpp" />
     <ClCompile Include="WriteSettings.cpp" />
+    <ClCompile Include="WriteSII.cpp" />
     <ClCompile Include="WriteULG.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +163,7 @@
     </ClInclude>
     <ClInclude Include="WriteDMComm.h" />
     <ClInclude Include="WriteSettings.h" />
+    <ClInclude Include="WriteSII.h" />
     <ClInclude Include="WriteULG.h" />
   </ItemGroup>
   <ItemGroup>

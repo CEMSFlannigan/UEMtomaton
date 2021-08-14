@@ -24,6 +24,7 @@
 #include <random>       // std::default_random_engine
 #include "WriteULG.h"
 #include "WriteDMComm.h"
+#include "WriteSII.h"
 #include "WriteSettings.h"
 #include "Soloist.h"
 
@@ -49,17 +50,25 @@ char dc_buffer[1024], cc_buffer[1024];
 // Indicates the size of the addresses for each communication client and server. Used to open a port
 int cc_clientAddrSize, dc_clientAddrSize, servAddrSize;
 
+double SII_acq_time; // selective in situ mode acquisition time
+double SII_time_between; // selective in situe mode time skipped between saves
+int SII_images_skipped; // selective in situ mode number of images skipped to reach the time skipped required
+
+int SII_total_saves; // selective in situ mode total number of images saved
+double SII_total_time; // total time spent saving the images.
+
 double* timeTable; // the table of time points generated from the Make Timepoints program
 double* timeptArr; // the array of time points generated from the time-point table
 double* expArr; // the array of experimental time points to be measured by the instruments (accounts for randomization)
 int includeLast; // indicates whether or not to include the last point in the time-point table
 int randomized; // indicates a randomized set of timepoints or not
 int totPoints; // the total number of points in the experimental time points array
+int delayConnected; // indicates whether or not the delay stage has been connected
 
 int designation; // used to designate whether camera or delay stage after pressing the initialize buttons on either side
 int runStat; // indicates the status of a currently running scan. 0 indicates not running. 1 indicates running. 2 indicates a pause. 3 indicates a stop command which will switch to 0.
 int repeatValue; // indicates the number of repeat scans there will be in a single run. This will be defaulted to zero to indicate a single pass.
-int butPressMeantime; // indicates whether a button has been pressed while a run is occuring (pause, play, or stop)
+int butPressMeantime; // indicates whether a button has been pressed while a run is occuring (pause, play, or stop 
 double timeLeft; // keeps track of the time left in a run. This is an estimated
 
 double spdlght; // m/s
@@ -104,6 +113,15 @@ namespace UEMtomaton {
 			runStat = 0; // set default value of runStat
 			repeatValue = 0; // set default value of repeatValue
 			timeLeft = 0; // set the estimated time left to zero
+
+			SII_acq_time = -1; // selective in situ mode acquisition time
+			SII_time_between = -1; // selective in situe mode time skipped between saves
+			SII_images_skipped = 0; // selective in situ mode number of images skipped to reach the time skipped required
+
+			SII_total_saves = -1; // selective in situ mode total number of images saved
+			SII_total_time = -1; // total time spent saving the images.
+
+			delayConnected = 0;
 
 			std::string acqTimeZero;
 			std::string acqSpeed;
@@ -300,6 +318,43 @@ private: System::Windows::Forms::Button^ loadSettingsButton;
 
 private: System::Windows::Forms::Button^ DefaultSettingsRestore;
 private: System::Windows::Forms::Button^ SaveSettingsButton;
+private: System::Windows::Forms::Button^ delayConnect;
+private: System::Windows::Forms::TabPage^ tabPage3;
+private: System::Windows::Forms::Label^ label13;
+private: System::Windows::Forms::TextBox^ SII_total_Time;
+
+
+private: System::Windows::Forms::Label^ label22;
+private: System::Windows::Forms::TextBox^ filebaseSelInSitu;
+
+private: System::Windows::Forms::Label^ label20;
+private: System::Windows::Forms::Button^ browseSII;
+
+private: System::Windows::Forms::TextBox^ filepathSelInSitu;
+
+private: System::Windows::Forms::Label^ label21;
+private: System::Windows::Forms::Label^ label19;
+private: System::Windows::Forms::TextBox^ SII_total_Saves;
+
+private: System::Windows::Forms::Button^ selectiveInSitu;
+private: System::Windows::Forms::Label^ label18;
+private: System::Windows::Forms::Label^ label17;
+private: System::Windows::Forms::Label^ label14;
+private: System::Windows::Forms::TextBox^ SII_skipped;
+private: System::Windows::Forms::TextBox^ SII_time_Between;
+private: System::Windows::Forms::TextBox^ SII_acq_Time;
+
+
+
+
+
+
+private: System::Windows::Forms::Label^ label23;
+private: System::Windows::Forms::TextBox^ SII_status_box;
+private: System::Windows::Forms::Label^ versionNumber;
+
+
+
 
 
 
@@ -318,11 +373,11 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 		/// Required method for Designer support
 		void InitializeComponent(void)
 		{
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle11 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle12 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle13 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle14 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle15 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(UEMAuto::typeid));
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->BottomToolStripPanel = (gcnew System::Windows::Forms::ToolStripPanel());
@@ -367,6 +422,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			this->disconCam = (gcnew System::Windows::Forms::Button());
 			this->ServConnButton = (gcnew System::Windows::Forms::Button());
 			this->delayTab = (gcnew System::Windows::Forms::TabPage());
+			this->delayConnect = (gcnew System::Windows::Forms::Button());
 			this->disconServ = (gcnew System::Windows::Forms::Button());
 			this->statusWindow = (gcnew System::Windows::Forms::TextBox());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
@@ -381,6 +437,26 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			this->delayMovFor = (gcnew System::Windows::Forms::Button());
 			this->delayMovBack = (gcnew System::Windows::Forms::Button());
 			this->ServInitButton = (gcnew System::Windows::Forms::Button());
+			this->tabPage3 = (gcnew System::Windows::Forms::TabPage());
+			this->SII_status_box = (gcnew System::Windows::Forms::TextBox());
+			this->label23 = (gcnew System::Windows::Forms::Label());
+			this->SII_total_Time = (gcnew System::Windows::Forms::TextBox());
+			this->label22 = (gcnew System::Windows::Forms::Label());
+			this->filebaseSelInSitu = (gcnew System::Windows::Forms::TextBox());
+			this->label20 = (gcnew System::Windows::Forms::Label());
+			this->browseSII = (gcnew System::Windows::Forms::Button());
+			this->filepathSelInSitu = (gcnew System::Windows::Forms::TextBox());
+			this->label21 = (gcnew System::Windows::Forms::Label());
+			this->label19 = (gcnew System::Windows::Forms::Label());
+			this->SII_total_Saves = (gcnew System::Windows::Forms::TextBox());
+			this->selectiveInSitu = (gcnew System::Windows::Forms::Button());
+			this->label18 = (gcnew System::Windows::Forms::Label());
+			this->label17 = (gcnew System::Windows::Forms::Label());
+			this->label14 = (gcnew System::Windows::Forms::Label());
+			this->SII_skipped = (gcnew System::Windows::Forms::TextBox());
+			this->SII_time_Between = (gcnew System::Windows::Forms::TextBox());
+			this->SII_acq_Time = (gcnew System::Windows::Forms::TextBox());
+			this->label13 = (gcnew System::Windows::Forms::Label());
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
 			this->loadSettingsButton = (gcnew System::Windows::Forms::Button());
 			this->DefaultSettingsRestore = (gcnew System::Windows::Forms::Button());
@@ -400,12 +476,14 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			this->scanRunner = (gcnew System::ComponentModel::BackgroundWorker());
 			this->cameraRunner = (gcnew System::ComponentModel::BackgroundWorker());
 			this->delayValueUpdater = (gcnew System::ComponentModel::BackgroundWorker());
+			this->versionNumber = (gcnew System::Windows::Forms::Label());
 			this->cameraTab->SuspendLayout();
 			this->tabPage2->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->DataReadouts))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->TimePoints))->BeginInit();
 			this->delayTab->SuspendLayout();
 			this->groupBox1->SuspendLayout();
+			this->tabPage3->SuspendLayout();
 			this->tabPage1->SuspendLayout();
 			this->GeneralSettingsBox->SuspendLayout();
 			this->DelaySettingsBox->SuspendLayout();
@@ -463,8 +541,9 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			// 
 			this->cameraTab->Controls->Add(this->tabPage2);
 			this->cameraTab->Controls->Add(this->delayTab);
+			this->cameraTab->Controls->Add(this->tabPage3);
 			this->cameraTab->Controls->Add(this->tabPage1);
-			this->cameraTab->Location = System::Drawing::Point(16, 53);
+			this->cameraTab->Location = System::Drawing::Point(16, 54);
 			this->cameraTab->Name = L"cameraTab";
 			this->cameraTab->SelectedIndex = 0;
 			this->cameraTab->Size = System::Drawing::Size(796, 610);
@@ -531,41 +610,41 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			// 
 			this->DataReadouts->AllowUserToAddRows = false;
 			this->DataReadouts->AllowUserToDeleteRows = false;
-			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle11->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle11->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle11->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->DataReadouts->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle11->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle11->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle11->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle11->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->DataReadouts->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle11;
 			this->DataReadouts->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->DataReadouts->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {
 				this->Step, this->Timepoint,
 					this->DelayPos, this->delayStatus
 			});
-			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle12->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle12->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle12->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
-			this->DataReadouts->DefaultCellStyle = dataGridViewCellStyle2;
+			dataGridViewCellStyle12->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle12->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle12->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle12->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
+			this->DataReadouts->DefaultCellStyle = dataGridViewCellStyle12;
 			this->DataReadouts->Location = System::Drawing::Point(194, 211);
 			this->DataReadouts->Name = L"DataReadouts";
 			this->DataReadouts->ReadOnly = true;
-			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle13->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle13->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle13->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle3->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle3->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle3->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle3->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->DataReadouts->RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+			dataGridViewCellStyle13->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle13->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle13->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle13->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->DataReadouts->RowHeadersDefaultCellStyle = dataGridViewCellStyle13;
 			this->DataReadouts->Size = System::Drawing::Size(575, 223);
 			this->DataReadouts->TabIndex = 8;
 			// 
@@ -621,7 +700,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			this->runScan->Name = L"runScan";
 			this->runScan->Size = System::Drawing::Size(106, 51);
 			this->runScan->TabIndex = 6;
-			this->runScan->Text = L"4. Run Scan";
+			this->runScan->Text = L"5. Run Scan";
 			this->runScan->UseVisualStyleBackColor = true;
 			this->runScan->Click += gcnew System::EventHandler(this, &UEMAuto::RunScan_Click);
 			// 
@@ -652,7 +731,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			this->MakeTimeButton->Name = L"MakeTimeButton";
 			this->MakeTimeButton->Size = System::Drawing::Size(124, 51);
 			this->MakeTimeButton->TabIndex = 3;
-			this->MakeTimeButton->Text = L"3. Make Timepoints";
+			this->MakeTimeButton->Text = L"4. Make Timepoints";
 			this->MakeTimeButton->UseVisualStyleBackColor = true;
 			this->MakeTimeButton->Click += gcnew System::EventHandler(this, &UEMAuto::MakeTimeButton_Click);
 			// 
@@ -669,26 +748,26 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			// 
 			this->TimePoints->AllowUserToAddRows = false;
 			this->TimePoints->AllowUserToDeleteRows = false;
-			dataGridViewCellStyle4->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle4->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle14->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle14->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle14->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle4->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle4->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle4->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle4->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->TimePoints->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+			dataGridViewCellStyle14->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle14->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle14->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle14->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->TimePoints->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle14;
 			this->TimePoints->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->TimePoints->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(1) { this->TimepointList });
-			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle5->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle15->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle15->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle15->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
-			this->TimePoints->DefaultCellStyle = dataGridViewCellStyle5;
+			dataGridViewCellStyle15->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle15->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle15->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle15->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
+			this->TimePoints->DefaultCellStyle = dataGridViewCellStyle15;
 			this->TimePoints->Location = System::Drawing::Point(18, 211);
 			this->TimePoints->Name = L"TimePoints";
 			this->TimePoints->ReadOnly = true;
@@ -861,16 +940,18 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			// 
 			// ServConnButton
 			// 
+			this->ServConnButton->ForeColor = System::Drawing::SystemColors::ControlText;
 			this->ServConnButton->Location = System::Drawing::Point(18, 16);
 			this->ServConnButton->Name = L"ServConnButton";
 			this->ServConnButton->Size = System::Drawing::Size(136, 51);
 			this->ServConnButton->TabIndex = 0;
-			this->ServConnButton->Text = L"2. Connect to Server";
+			this->ServConnButton->Text = L"3. Connect to Server";
 			this->ServConnButton->UseVisualStyleBackColor = true;
 			this->ServConnButton->Click += gcnew System::EventHandler(this, &UEMAuto::ServConnButton_Click);
 			// 
 			// delayTab
 			// 
+			this->delayTab->Controls->Add(this->delayConnect);
 			this->delayTab->Controls->Add(this->disconServ);
 			this->delayTab->Controls->Add(this->statusWindow);
 			this->delayTab->Controls->Add(this->groupBox1);
@@ -882,6 +963,16 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			this->delayTab->TabIndex = 0;
 			this->delayTab->Text = L"Delay Stage";
 			this->delayTab->UseVisualStyleBackColor = true;
+			// 
+			// delayConnect
+			// 
+			this->delayConnect->Location = System::Drawing::Point(18, 16);
+			this->delayConnect->Name = L"delayConnect";
+			this->delayConnect->Size = System::Drawing::Size(117, 51);
+			this->delayConnect->TabIndex = 12;
+			this->delayConnect->Text = L"1. Connect to \r\nDelay Stage";
+			this->delayConnect->UseVisualStyleBackColor = true;
+			this->delayConnect->Click += gcnew System::EventHandler(this, &UEMAuto::delayConnect_Click);
 			// 
 			// disconServ
 			// 
@@ -1017,13 +1108,221 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			// 
 			// ServInitButton
 			// 
-			this->ServInitButton->Location = System::Drawing::Point(18, 16);
+			this->ServInitButton->Location = System::Drawing::Point(141, 16);
 			this->ServInitButton->Name = L"ServInitButton";
 			this->ServInitButton->Size = System::Drawing::Size(136, 51);
 			this->ServInitButton->TabIndex = 0;
-			this->ServInitButton->Text = L"1. Initialize Server";
+			this->ServInitButton->Text = L"2. Initialize Server";
 			this->ServInitButton->UseVisualStyleBackColor = true;
 			this->ServInitButton->Click += gcnew System::EventHandler(this, &UEMAuto::ServInitButton_Click);
+			// 
+			// tabPage3
+			// 
+			this->tabPage3->Controls->Add(this->SII_status_box);
+			this->tabPage3->Controls->Add(this->label23);
+			this->tabPage3->Controls->Add(this->SII_total_Time);
+			this->tabPage3->Controls->Add(this->label22);
+			this->tabPage3->Controls->Add(this->filebaseSelInSitu);
+			this->tabPage3->Controls->Add(this->label20);
+			this->tabPage3->Controls->Add(this->browseSII);
+			this->tabPage3->Controls->Add(this->filepathSelInSitu);
+			this->tabPage3->Controls->Add(this->label21);
+			this->tabPage3->Controls->Add(this->label19);
+			this->tabPage3->Controls->Add(this->SII_total_Saves);
+			this->tabPage3->Controls->Add(this->selectiveInSitu);
+			this->tabPage3->Controls->Add(this->label18);
+			this->tabPage3->Controls->Add(this->label17);
+			this->tabPage3->Controls->Add(this->label14);
+			this->tabPage3->Controls->Add(this->SII_skipped);
+			this->tabPage3->Controls->Add(this->SII_time_Between);
+			this->tabPage3->Controls->Add(this->SII_acq_Time);
+			this->tabPage3->Controls->Add(this->label13);
+			this->tabPage3->Location = System::Drawing::Point(4, 22);
+			this->tabPage3->Name = L"tabPage3";
+			this->tabPage3->Padding = System::Windows::Forms::Padding(3);
+			this->tabPage3->Size = System::Drawing::Size(788, 584);
+			this->tabPage3->TabIndex = 3;
+			this->tabPage3->Text = L"Selective In Situ";
+			this->tabPage3->UseVisualStyleBackColor = true;
+			// 
+			// SII_status_box
+			// 
+			this->SII_status_box->Location = System::Drawing::Point(207, 388);
+			this->SII_status_box->Multiline = true;
+			this->SII_status_box->Name = L"SII_status_box";
+			this->SII_status_box->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
+			this->SII_status_box->Size = System::Drawing::Size(565, 167);
+			this->SII_status_box->TabIndex = 18;
+			// 
+			// label23
+			// 
+			this->label23->AutoSize = true;
+			this->label23->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label23->Location = System::Drawing::Point(24, 223);
+			this->label23->Name = L"label23";
+			this->label23->Size = System::Drawing::Size(376, 64);
+			this->label23->TabIndex = 3;
+			this->label23->Text = resources->GetString(L"label23.Text");
+			// 
+			// SII_total_Time
+			// 
+			this->SII_total_Time->Location = System::Drawing::Point(667, 316);
+			this->SII_total_Time->Name = L"SII_total_Time";
+			this->SII_total_Time->ReadOnly = true;
+			this->SII_total_Time->Size = System::Drawing::Size(100, 20);
+			this->SII_total_Time->TabIndex = 17;
+			this->SII_total_Time->Text = L"-1";
+			this->SII_total_Time->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			// 
+			// label22
+			// 
+			this->label22->AutoSize = true;
+			this->label22->Location = System::Drawing::Point(676, 300);
+			this->label22->Name = L"label22";
+			this->label22->Size = System::Drawing::Size(83, 13);
+			this->label22->TabIndex = 16;
+			this->label22->Text = L"Total Time (sec)";
+			this->label22->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// filebaseSelInSitu
+			// 
+			this->filebaseSelInSitu->Location = System::Drawing::Point(109, 138);
+			this->filebaseSelInSitu->Name = L"filebaseSelInSitu";
+			this->filebaseSelInSitu->Size = System::Drawing::Size(189, 20);
+			this->filebaseSelInSitu->TabIndex = 15;
+			this->filebaseSelInSitu->Text = L"Test_01";
+			// 
+			// label20
+			// 
+			this->label20->AutoSize = true;
+			this->label20->Location = System::Drawing::Point(24, 141);
+			this->label20->Name = L"label20";
+			this->label20->Size = System::Drawing::Size(79, 13);
+			this->label20->TabIndex = 14;
+			this->label20->Text = L"Filename Base:";
+			// 
+			// browseSII
+			// 
+			this->browseSII->Location = System::Drawing::Point(309, 103);
+			this->browseSII->Name = L"browseSII";
+			this->browseSII->Size = System::Drawing::Size(75, 23);
+			this->browseSII->TabIndex = 13;
+			this->browseSII->Text = L"Browse";
+			this->browseSII->UseVisualStyleBackColor = true;
+			this->browseSII->Click += gcnew System::EventHandler(this, &UEMAuto::browseSII_Click);
+			// 
+			// filepathSelInSitu
+			// 
+			this->filepathSelInSitu->Location = System::Drawing::Point(77, 105);
+			this->filepathSelInSitu->Name = L"filepathSelInSitu";
+			this->filepathSelInSitu->Size = System::Drawing::Size(221, 20);
+			this->filepathSelInSitu->TabIndex = 12;
+			this->filepathSelInSitu->Text = L"C:\\";
+			// 
+			// label21
+			// 
+			this->label21->AutoSize = true;
+			this->label21->Location = System::Drawing::Point(24, 108);
+			this->label21->Name = L"label21";
+			this->label21->Size = System::Drawing::Size(47, 13);
+			this->label21->TabIndex = 11;
+			this->label21->Text = L"Filepath:";
+			// 
+			// label19
+			// 
+			this->label19->AutoSize = true;
+			this->label19->Location = System::Drawing::Point(24, 300);
+			this->label19->Name = L"label19";
+			this->label19->Size = System::Drawing::Size(64, 13);
+			this->label19->TabIndex = 10;
+			this->label19->Text = L"Total Saves";
+			// 
+			// SII_total_Saves
+			// 
+			this->SII_total_Saves->Location = System::Drawing::Point(27, 316);
+			this->SII_total_Saves->Name = L"SII_total_Saves";
+			this->SII_total_Saves->Size = System::Drawing::Size(100, 20);
+			this->SII_total_Saves->TabIndex = 9;
+			this->SII_total_Saves->Text = L"-1";
+			this->SII_total_Saves->TextChanged += gcnew System::EventHandler(this, &UEMAuto::SII_total_Saves_TextChanged);
+			// 
+			// selectiveInSitu
+			// 
+			this->selectiveInSitu->Location = System::Drawing::Point(24, 504);
+			this->selectiveInSitu->Name = L"selectiveInSitu";
+			this->selectiveInSitu->Size = System::Drawing::Size(118, 51);
+			this->selectiveInSitu->TabIndex = 3;
+			this->selectiveInSitu->Text = L"Begin Acquisition";
+			this->selectiveInSitu->UseVisualStyleBackColor = true;
+			this->selectiveInSitu->Click += gcnew System::EventHandler(this, &UEMAuto::selectiveInSitu_Click);
+			// 
+			// label18
+			// 
+			this->label18->AutoSize = true;
+			this->label18->Location = System::Drawing::Point(204, 170);
+			this->label18->Name = L"label18";
+			this->label18->Size = System::Drawing::Size(83, 13);
+			this->label18->TabIndex = 8;
+			this->label18->Text = L"Images Skipped";
+			// 
+			// label17
+			// 
+			this->label17->AutoSize = true;
+			this->label17->Location = System::Drawing::Point(682, 157);
+			this->label17->Name = L"label17";
+			this->label17->Size = System::Drawing::Size(75, 26);
+			this->label17->TabIndex = 7;
+			this->label17->Text = L"Time Between\r\nSaves (sec)";
+			this->label17->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// label14
+			// 
+			this->label14->AutoSize = true;
+			this->label14->Location = System::Drawing::Point(24, 170);
+			this->label14->Name = L"label14";
+			this->label14->Size = System::Drawing::Size(84, 13);
+			this->label14->TabIndex = 6;
+			this->label14->Text = L"Acquisition Time";
+			// 
+			// SII_skipped
+			// 
+			this->SII_skipped->Location = System::Drawing::Point(207, 186);
+			this->SII_skipped->Name = L"SII_skipped";
+			this->SII_skipped->Size = System::Drawing::Size(100, 20);
+			this->SII_skipped->TabIndex = 5;
+			this->SII_skipped->Text = L"0";
+			this->SII_skipped->TextChanged += gcnew System::EventHandler(this, &UEMAuto::SII_skipped_TextChanged);
+			// 
+			// SII_time_Between
+			// 
+			this->SII_time_Between->Location = System::Drawing::Point(667, 186);
+			this->SII_time_Between->Name = L"SII_time_Between";
+			this->SII_time_Between->ReadOnly = true;
+			this->SII_time_Between->Size = System::Drawing::Size(100, 20);
+			this->SII_time_Between->TabIndex = 4;
+			this->SII_time_Between->Text = L"-1";
+			this->SII_time_Between->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			// 
+			// SII_acq_Time
+			// 
+			this->SII_acq_Time->Location = System::Drawing::Point(27, 186);
+			this->SII_acq_Time->Name = L"SII_acq_Time";
+			this->SII_acq_Time->Size = System::Drawing::Size(100, 20);
+			this->SII_acq_Time->TabIndex = 3;
+			this->SII_acq_Time->Text = L"-1";
+			this->SII_acq_Time->TextChanged += gcnew System::EventHandler(this, &UEMAuto::SII_acq_Time_TextChanged);
+			// 
+			// label13
+			// 
+			this->label13->AutoSize = true;
+			this->label13->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label13->Location = System::Drawing::Point(21, 21);
+			this->label13->Name = L"label13";
+			this->label13->Size = System::Drawing::Size(751, 72);
+			this->label13->TabIndex = 3;
+			this->label13->Text = resources->GetString(L"label13.Text");
 			// 
 			// tabPage1
 			// 
@@ -1192,11 +1491,21 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			this->delayValueUpdater->WorkerSupportsCancellation = true;
 			this->delayValueUpdater->DoWork += gcnew System::ComponentModel::DoWorkEventHandler(this, &UEMAuto::DelayValueUpdater_DoWork);
 			// 
+			// versionNumber
+			// 
+			this->versionNumber->AutoSize = true;
+			this->versionNumber->Location = System::Drawing::Point(748, 9);
+			this->versionNumber->Name = L"versionNumber";
+			this->versionNumber->Size = System::Drawing::Size(60, 13);
+			this->versionNumber->TabIndex = 15;
+			this->versionNumber->Text = L"Version 1.5";
+			// 
 			// UEMAuto
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(823, 689);
+			this->Controls->Add(this->versionNumber);
 			this->Controls->Add(this->curTime);
 			this->Controls->Add(this->cameraTab);
 			this->Controls->Add(this->label1);
@@ -1212,6 +1521,8 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			this->delayTab->PerformLayout();
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
+			this->tabPage3->ResumeLayout(false);
+			this->tabPage3->PerformLayout();
 			this->tabPage1->ResumeLayout(false);
 			this->GeneralSettingsBox->ResumeLayout(false);
 			this->GeneralSettingsBox->PerformLayout();
@@ -1281,31 +1592,55 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 
 			this->trackTime->RunWorkerAsync();
 			
-			if (!SoloistConnect(&handles, &handleCount))
+			if (delayConnected == 0)
 			{
-				this->statusWindow->AppendText("No controllers found.\n");
-				cleanupSoloist();
-				return;
-			}
+				if (!SoloistConnect(&handles, &handleCount))
+				{
+					this->statusWindow->AppendText("No controllers found.\r\n");
+					cleanupSoloist();
+					cleanupSockets();
+					this->statusWindow->AppendText("Sockets closed.\r\n");
+					return;
+				}
 
-			if (handleCount != 1)
-			{
-				this->statusWindow->AppendText("Too many controllers.\n");
-				cleanupSoloist();
-				return;
-			}
-			handle = handles[0];
+				if (handleCount != 1)
+				{
+					this->statusWindow->AppendText("Too many controllers.\r\n");
+					cleanupSoloist();
+					cleanupSockets();
+					this->statusWindow->AppendText("Sockets closed.\r\n");
+					return;
+				}
+				handle = handles[0];
 
-			if (!SoloistMotionEnable(handle))
-			{
-				cleanupSoloist();
-				return;
+				if (!SoloistMotionEnable(handle))
+				{
+					this->statusWindow->AppendText("Motion cannot be enabled.\r\n");
+					cleanupSoloist();
+					cleanupSockets();
+					this->statusWindow->AppendText("Sockets closed.\r\n");
+					return;
+				}
+
+				this->scanRunner->RunWorkerAsync(); // run the scan-thread
+
+				this->delayValueUpdater->RunWorkerAsync();
 			}
-			
-			this->scanRunner->RunWorkerAsync(); // run the scan-thread
-			
-			this->delayValueUpdater->RunWorkerAsync();
+			else
+			{
+				this->statusWindow->AppendText("Delay stage already connected.\r\n");
+				this->scanRunner->RunWorkerAsync(); // run the scan-thread
+			}
 	
+			this->statusWindow->AppendText("Ready for scan.\r\n");
+
+		}
+
+		private: System::Void cleanupSockets()
+		{
+			closesocket(dc_server);
+			closesocket(cc_server);
+			WSACleanup();
 		}
 
 		/* RunScan_Click
@@ -1526,6 +1861,8 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 				printSoloistError();
 			}
 
+			delayConnected = 0;
+
 			String^ upStat = gcnew String("Server shutdown.\r\n");
 			this->statusWindow->AppendText(upStat);
 
@@ -1550,6 +1887,11 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 		{
 			this->delayComm->CancelAsync();
 		}
+		delegate System::Void timeStopTrack();
+		System::Void stopTrackTime()
+		{
+			this->trackTime->CancelAsync();
+		}
 		delegate System::Void delPosDisUp(double curPos);
 		private: System::Void timeTracker_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e)
 		{
@@ -1557,6 +1899,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			System::Threading::Thread::Sleep(1000);
 
 			// ADD DELAY VALUE PASSING
+			int connectHealth;
 			DateTime initTime = DateTime::Now;
 			DateTime curTime;
 			TimeSpan connectTime;
@@ -1591,7 +1934,14 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 					}
 				}
 
-				send(delaycomm_client, dc_buffer, sizeof(dc_buffer), 0);
+				connectHealth = send(delaycomm_client, dc_buffer, sizeof(dc_buffer), 0);
+
+				if (connectHealth = SOCKET_ERROR)
+				{
+					cleanupSockets();
+					cleanupSoloist();
+					this->BeginInvoke(gcnew timeStopTrack(this, &UEMAuto::stopTrackTime));
+				}
 
 				memset(dc_buffer, 0, sizeof(dc_buffer));
 
@@ -1614,13 +1964,21 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 				dc_buffer[curdelPosStr.length() + curdelTimStr.length() + 2] = '|';
 				dc_buffer[curdelPosStr.length() + curdelTimStr.length() + 3] = '\0';
 
-				send(delaycomm_client, dc_buffer, sizeof(dc_buffer), 0);
+				connectHealth = send(delaycomm_client, dc_buffer, sizeof(dc_buffer), 0);
+
+				if (connectHealth = SOCKET_ERROR)
+				{
+					cleanupSockets();
+					cleanupSoloist();
+					this->BeginInvoke(gcnew timeStopTrack(this, &UEMAuto::stopTrackTime));
+				}
 
 				memset(dc_buffer, 0, sizeof(dc_buffer));
 
 			}
 
 			this->BeginInvoke(gcnew delStopComm(this, &UEMAuto::stopDelComm));
+			this->BeginInvoke(gcnew timeStopTrack(this, &UEMAuto::stopTrackTime));
 
 		}
 
@@ -1641,7 +1999,7 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 		}
 		private: System::Void DelayComm_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e) 
 		{
-
+			int connectHealth;
 			char curChar;
 			int sizeData;
 			int tracker = 0;
@@ -1654,7 +2012,14 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 
 			do
 			{
-				recv(dc_server, dc_buffer, sizeof(dc_buffer), 0);
+				connectHealth = recv(dc_server, dc_buffer, sizeof(dc_buffer), 0);
+
+				if (connectHealth == SOCKET_ERROR)
+				{
+					cleanupSockets();
+					cleanupSoloist();
+					this->BeginInvoke(gcnew delStopComm(this, &UEMAuto::stopDelComm));
+				}
 
 				if (dc_buffer[0] == '0')
 				{
@@ -1736,6 +2101,10 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 		private: System::Void ServConnButton_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
 
+			int sock1Res;
+			int sock2Res;
+			String^ upStat;
+
 			WSAStartup(MAKEWORD(2, 0), &WSAData);
 			dc_server = socket(AF_INET, SOCK_STREAM, 0);
 			cc_server = socket(AF_INET, SOCK_STREAM, 0);
@@ -1748,16 +2117,46 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			cc_addr.sin_family = AF_INET;
 			cc_addr.sin_port = htons(6667);
 
-			servAddrSize = sizeof(dc_addr);
-			connect(dc_server, (SOCKADDR*)& dc_addr, sizeof(dc_addr));
-
-			servAddrSize = sizeof(cc_addr);
-			connect(cc_server, (SOCKADDR*)& cc_addr, sizeof(cc_addr));
-
-			String^ upStat = gcnew String("Connected to server!\r\n");
+			upStat = gcnew String("Searching for connection. Blocking rest of program until connection established.\r\n");
 			this->camStat->AppendText(upStat);
 
-			this->delayComm->RunWorkerAsync();
+			servAddrSize = sizeof(dc_addr);
+			sock1Res = connect(dc_server, (SOCKADDR*)& dc_addr, sizeof(dc_addr));
+
+			servAddrSize = sizeof(cc_addr);
+			sock2Res = connect(cc_server, (SOCKADDR*)&cc_addr, sizeof(cc_addr));
+
+			if (sock1Res == SOCKET_ERROR || sock2Res == SOCKET_ERROR)
+			{
+				upStat = gcnew String("connect function failed with error:" + WSAGetLastError() + "\r\n");
+				this->camStat->AppendText(upStat);
+
+				sock1Res = closesocket(dc_server);
+				if (sock1Res == SOCKET_ERROR)
+				{
+					upStat = gcnew String("closesocket function failed with error:" + WSAGetLastError() + "\r\n");
+					this->camStat->AppendText(upStat);
+				}
+
+				upStat = gcnew String("connect function failed with error:" + WSAGetLastError() + "\r\n");
+				this->camStat->AppendText(upStat);
+
+				sock2Res = closesocket(cc_server);
+				if (sock2Res == SOCKET_ERROR)
+				{
+					upStat = gcnew String("closesocket function failed with error:" + WSAGetLastError() + "\r\n");
+					this->camStat->AppendText(upStat);
+				}
+
+				WSACleanup();
+			}
+			else
+			{
+				upStat = gcnew String("Connected to server!\r\n");
+				this->camStat->AppendText(upStat);
+
+				this->delayComm->RunWorkerAsync();
+			}
 
 		}
 
@@ -1902,9 +2301,15 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 		{
 			this->camStat->AppendText(appStat);
 		}
+		delegate System::Void cameraRunnerStop();
+		System::Void stopCameraRunner()
+		{
+			this->cameraRunner->CancelAsync();
+		}
 		private: System::Void CameraRunner_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e) 
 		{
 
+			int connectHealth = 0;
 			int firstPass = 0;
 			int recvSignal = 0;
 			int firstPause = 1;
@@ -1952,7 +2357,8 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			this->BeginInvoke(gcnew DelRunGridClear(this, &UEMAuto::DelGridRunClear));
 
 			hWnd = FindWindow(NULL, L"DigitalMicrograph");
-			if (hWnd) {
+			if (hWnd) 
+			{
 				// move to foreground
 				this->WindowState = System::Windows::Forms::FormWindowState::Minimized;
 				this->WindowState = System::Windows::Forms::FormWindowState::Normal; // this is the dumbest hack I've tried and I'm almost ashamed it works. Almost.
@@ -2039,11 +2445,25 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 						cc_buffer[timeVal.length() + 1] = '|';
 						cc_buffer[timeVal.length() + 2] = '\0';
 
-						send(cc_server, cc_buffer, sizeof(cc_buffer), 0);
+						connectHealth = send(cc_server, cc_buffer, sizeof(cc_buffer), 0);
+
+						if (connectHealth == SOCKET_ERROR)
+						{
+							cleanupSockets();
+							cleanupSoloist();
+							this->BeginInvoke(gcnew cameraRunnerStop(this, &UEMAuto::stopCameraRunner));
+						}
 
 						memset(cc_buffer, 0, sizeof(cc_buffer));
 
-						recv(cc_server, cc_buffer, sizeof(cc_buffer), 0);
+						connectHealth = recv(cc_server, cc_buffer, sizeof(cc_buffer), 0);
+
+						if (connectHealth == SOCKET_ERROR)
+						{
+							cleanupSockets();
+							cleanupSoloist();
+							this->BeginInvoke(gcnew cameraRunnerStop(this, &UEMAuto::stopCameraRunner));
+						}
 						
 						memset(cc_buffer, 0, sizeof(cc_buffer));
 						
@@ -2283,7 +2703,15 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			cc_buffer[0] = '0';
 			cc_buffer[1] = '\0';
 
-			send(cc_server, cc_buffer, sizeof(cc_buffer), 0);
+			connectHealth = send(cc_server, cc_buffer, sizeof(cc_buffer), 0);
+
+			if (connectHealth == SOCKET_ERROR)
+			{
+				cleanupSockets();
+				cleanupSoloist();
+				this->BeginInvoke(gcnew cameraRunnerStop(this, &UEMAuto::stopCameraRunner));
+			}
+
 			memset(cc_buffer, 0, sizeof(cc_buffer));
 
 			upStat = "Scan complete.\r\n";
@@ -2304,10 +2732,16 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 		{
 			this->statusWindow->AppendText(appStat);
 		}
+		delegate System::Void scanRunStop();
+		System::Void stopScanRun()
+		{
+			this->scanRunner->CancelAsync();
+		}
 		private: System::Void ScanRunner_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e) 
 		{
 
 			int rundel = 0;
+			int connectHealth;
 
 			char curChar;
 			int sizeDelayData;
@@ -2322,7 +2756,14 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 				tracker = 0;
 
 				this->BeginInvoke(gcnew UpdateDelStatus(this, &UEMAuto::DelStatUpdater), gcnew String("Awaiting incoming data.\n"));
-				recv(camcomm_client, cc_buffer, sizeof(cc_buffer), 0);
+				connectHealth = recv(camcomm_client, cc_buffer, sizeof(cc_buffer), 0);
+
+				if (connectHealth == SOCKET_ERROR)
+				{
+					cleanupSockets();
+					cleanupSoloist();
+					this->BeginInvoke(gcnew scanRunStop(this, &UEMAuto::stopScanRun));
+				}
 
 				if (cc_buffer[0] == '1')
 				{
@@ -2378,7 +2819,14 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 
 					cc_buffer[0] = '1\0';
 
-					send(camcomm_client, cc_buffer, sizeof(cc_buffer), 0);
+					connectHealth = send(camcomm_client, cc_buffer, sizeof(cc_buffer), 0);
+					
+					if (connectHealth == SOCKET_ERROR)
+					{
+						cleanupSockets();
+						cleanupSoloist();
+						this->BeginInvoke(gcnew scanRunStop(this, &UEMAuto::stopScanRun));
+					}
 
 					memset(cc_buffer, 0, sizeof(cc_buffer));
 				}
@@ -2490,6 +2938,8 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 				{ 
 					printSoloistError(); 
 				}
+
+				delayConnected = 0;
 			}
 		}
 
@@ -2742,6 +3192,188 @@ private: System::Windows::Forms::Button^ SaveSettingsButton;
 			this->delaySpd->Text = this->delaySpeedSetting->Text;
 			this->DelayIPSetting->Text = gcnew String("192.168.0.3");
 			this->servIP->Text = this->DelayIPSetting->Text;
+
+		}
+
+		private: System::Void delayConnect_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+
+			if (!SoloistConnect(&handles, &handleCount))
+			{
+				this->statusWindow->AppendText("No controllers found.\r\n");
+				cleanupSoloist();
+				return;
+			}
+
+			if (handleCount != 1)
+			{
+				this->statusWindow->AppendText("Too many controllers.\r\n");
+				cleanupSoloist();
+				return;
+			}
+			handle = handles[0];
+
+			if (!SoloistMotionEnable(handle))
+			{
+				this->statusWindow->AppendText("Motion cannot be enabled.\r\n");
+				cleanupSoloist();
+				return;
+			}
+
+			this->delayValueUpdater->RunWorkerAsync();
+
+			this->statusWindow->AppendText("Delay stage connected.\r\n");
+			delayConnected = 1;
+
+		}
+
+		/// <summary>
+		/// SELECTIVE IN SITU CODE HERE
+		/// </summary>
+
+		private: System::Void SII_acq_Time_TextChanged(System::Object^ sender, System::EventArgs^ e) 
+		{
+
+			SII_acq_time = std::stod(msclr::interop::marshal_as<std::string>(this->SII_acq_Time->Text));
+
+			if (SII_acq_time > 0)
+			{
+				SII_time_between = (SII_images_skipped + 1) * SII_acq_time;
+				this->SII_time_Between->Text = gcnew String(SII_time_between.ToString());
+
+				if (SII_total_saves > 0)
+				{
+					SII_total_time = SII_total_saves * SII_acq_time * (SII_images_skipped + 1);
+					this->SII_total_Time->Text = gcnew String(SII_total_time.ToString());
+				}
+				else
+				{
+					SII_total_time = -1;
+				}
+			}
+			else
+			{
+				SII_total_time = -1;
+				SII_acq_time = -1;
+				this->SII_acq_Time->Text = gcnew String("-1");
+				this->SII_time_Between->Text = gcnew String("-1");
+				this->SII_total_Time->Text = gcnew String("-1");
+			}
+
+		}
+
+		private: System::Void SII_skipped_TextChanged(System::Object^ sender, System::EventArgs^ e) 
+		{
+			
+			SII_images_skipped = std::stoi(msclr::interop::marshal_as<std::string>(this->SII_skipped->Text));
+
+			if (SII_images_skipped < 0)
+			{
+
+				SII_images_skipped = 0;
+
+			}
+
+			if (SII_acq_time > 0)
+			{
+
+				SII_time_between = (SII_images_skipped + 1) * SII_acq_time;
+				this->SII_time_Between->Text = gcnew String(SII_time_between.ToString());
+
+			}
+
+			if (SII_total_saves > 0)
+			{
+				SII_total_time = SII_total_saves * SII_acq_time * (SII_images_skipped + 1);
+				this->SII_total_Time->Text = gcnew String(SII_total_time.ToString());
+			}
+			else
+			{
+				SII_total_time = -1;
+			}
+
+		}
+
+		private: System::Void SII_total_Saves_TextChanged(System::Object^ sender, System::EventArgs^ e) 
+		{
+
+			SII_total_saves = std::stoi(msclr::interop::marshal_as<std::string>(this->SII_total_Saves->Text));
+
+			if (SII_acq_time > 0)
+			{
+				SII_total_time = SII_total_saves * SII_acq_time * (SII_images_skipped + 1);
+				this->SII_total_Time->Text = gcnew String(SII_total_time.ToString());
+			}
+			else
+			{
+				SII_total_time = -1;
+			}
+
+		}
+
+		private: System::Void browseSII_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+
+			FolderBrowserDialog^ imgDirectory = gcnew FolderBrowserDialog;
+
+			imgDirectory->Description = "Select your dm4 file location.";
+			imgDirectory->ShowNewFolderButton = true;
+
+			imgDirectory->ShowDialog();
+
+			this->filepathSelInSitu->Text = imgDirectory->SelectedPath;
+			this->filebaseSelInSitu->Refresh();
+
+		}
+
+		private: System::Void selectiveInSitu_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+			
+			String^ upStat;
+			HWND hWnd;
+
+			WriteSII SIICommWriter;
+
+			upStat = "Updating DM communication for selective in situe mode.\r\n";
+			this->SII_status_box->AppendText(upStat);
+			// UPDATE CAMERA COMMUNICATION DOCUMENT
+			SIICommWriter.WriteData("1", "1","1", "1", "1"); //"X:\\TestFile\\SIIFileInput.txt", msclr::interop::marshal_as<std::string>(this->filepathSelInSitu->Text), msclr::interop::marshal_as<std::string>(this->filebaseSelInSitu->Text), std::to_string(SII_images_skipped), std::to_string(SII_total_saves)
+
+			hWnd = FindWindow(NULL, L"DigitalMicrograph");
+			if (hWnd) {
+				// move to foreground
+				this->WindowState = System::Windows::Forms::FormWindowState::Minimized;
+				this->WindowState = System::Windows::Forms::FormWindowState::Normal; // this is the dumbest hack I've tried and I'm almost ashamed it works. Almost.
+				//SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+				SetForegroundWindowInternal(hWnd);
+				//SetActiveWindow(hWnd);
+
+				this->PressKey(VK_F10);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_DOWN);
+				this->PressKey(VK_DOWN); 
+				this->PressKey(VK_DOWN);
+				this->PressKey(VK_DOWN);
+				this->PressKey(VK_RETURN);
+
+				System::Threading::Thread::Sleep(30);
+
+				this->WindowState = System::Windows::Forms::FormWindowState::Minimized;
+				this->WindowState = System::Windows::Forms::FormWindowState::Normal; // facepalm
+
+			}
+			else
+			{
+				upStat = gcnew String("DM was not found.\r\n");
+				this->SII_status_box->AppendText(upStat);
+			}
 
 		}
 
