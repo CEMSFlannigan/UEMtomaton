@@ -9,7 +9,7 @@
 string CreateISFileName(string DirName, string FileName, number hour, number minute, number second, number frame)
 	{
 	string ISFileName=FileName
-		   ISFileName=PathConcatenate(ISFileName,(FileName+frame+hour+minute+second+".dm4"))
+		   ISFileName=PathConcatenate(ISFileName,(FileName+"_"+frame+"_"+hour+"_"+minute+"_"+second+".dm4"))
 		   ISFileName=PathConcatenate(DirName,ISFileName)
 	return ISFileName
 	}
