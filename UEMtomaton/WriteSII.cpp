@@ -22,8 +22,9 @@ void WriteSII::WriteData(std::string FileName, std::string val1, std::string val
 
 	OpenFile.open(FileName);
 
-	OpenFile << val1 + ".ext\n\0";
+	OpenFile << val1 + "\\.ext\n\0";
 	OpenFile << val2 + ".ext\n\0";
+	OpenFile << "\n\0";
 	OpenFile << val3 + "\n\0";
 	OpenFile << val4 + "\n\0";
 

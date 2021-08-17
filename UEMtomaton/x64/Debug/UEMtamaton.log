@@ -1,13 +1,20 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(467,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (UEMtamaton.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   UEMAuto.cpp
   The contents of <filesystem> are available only with C++17 or later.
-C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(1415,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(1335,4): warning C4996: 'spawnl': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _spawnl. See online help for details.
-C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(1605,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(1593,83): warning C4996: 'ctime': This function or variable may be unsafe. Consider using ctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(2085,26): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(2209,25): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(2351,1): warning C4305: '=': truncation from 'int' to 'char'
-C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(2351,21): warning C4309: '=': truncation of constant value
+C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(1752,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(1672,4): warning C4996: 'spawnl': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _spawnl. See online help for details.
+C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(1816,19): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
+          with
+          [
+              _Rep=std::chrono::system_clock::rep
+          ]
+C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(1959,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(1947,83): warning C4996: 'ctime': This function or variable may be unsafe. Consider using ctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(2528,26): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(2652,25): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(2824,1): warning C4305: '=': truncation from 'int' to 'char'
+C:\Users\ddu00001\Desktop\UEMtomaton\UEMAuto.h(2824,21): warning C4309: '=': truncation of constant value
+  WriteSII.cpp
+  Generating Code...
   UEMAuto.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
   UEMtamaton.vcxproj -> C:\Users\ddu00001\Desktop\UEMtomaton\x64\Debug\UEMtomaton.exe

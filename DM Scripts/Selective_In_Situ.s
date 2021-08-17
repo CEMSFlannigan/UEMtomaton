@@ -8,8 +8,7 @@
 // Function to produce a filename compatible with Gatan's IS Player
 string CreateISFileName(string DirName, string FileName, number hour, number minute, number second, number frame)
 	{
-	string ISFileName=FileName
-		   ISFileName=PathConcatenate(ISFileName,(FileName+"_"+frame+"_"+hour+"_"+minute+"_"+second+".dm4"))
+	string ISFileName=FileName+"_"+frame+".dm4"
 		   ISFileName=PathConcatenate(DirName,ISFileName)
 	return ISFileName
 	}
@@ -55,16 +54,23 @@ Class CAutoActOnImageUpdate
 
 		//this take the "texttags" taggroup and dissects it into entered data
 		texttags.TagGroupGetTagAsString( "inputline 1", SavePath)
-		dm3path = pathextractdirectory(dm3path, 0) // This is a funny line of code that chops off a filename extension 
+		SavePath = pathextractdirectory(SavePath, 0) // This is a funny line of code that chops off a filename extension 
 
 		// This is necessary because the text importer script like to attach linebreaks into the imported text that ruin paths
 		texttags.TagGroupGetTagAsString( "inputline 2", SaveBaseName)
-		dm3FN = pathextractbasename(dm3FN, 0) //yet again chopping off a extension, this one only holds a basename instead of full path
+		SaveBaseName = pathextractbasename(SaveBaseName, 0) //yet again chopping off a extension, this one only holds a basename instead of full path
 		
-		texttags.TagGroupGetTagAsNumber( "inputline 3", skip)
-		texttags.TagGroupGetTagAsNumber( "inputline 4", totalSaves)
+		texttags.TagGroupGetTagAsNumber( "inputline 4", skip)
+		texttags.TagGroupGetTagAsNumber( "inputline 5", totalSaves)
 		
+		result("Save Path: " + SavePath + "\n")
+		result("Save Base: " + SaveBaseName + "\n")
+		result("Images to Skip: " + skip + "\n")
+		result("Total Saves: " + totalSaves + "\n")
+		
+		skip++;
 		numSaved = 0;
+		Frame = 0;
 
 		//Get year, month, day
 		DeconstructLocalGregorianDate(getcurrenttime(), year, month, day, hr, min, sec, nsec)
@@ -83,6 +89,11 @@ Class CAutoActOnImageUpdate
  		// also automatically unregister.
 		ListenerID 	= img.ImageAddEventListener( self, messagemap )
 		
+		image cloneImg := img.ImageClone()
+		string FileName=CreateISFileName(SavePath, SaveBaseName, hr, min, sec, Frame)
+		cloneImg.SaveAsGatan( FileName )
+					Result( "Saved initial image.\n")
+		
 		// Register KeyListener to provide mechanism to stop the script
 		// Not that this is an event registered with the DISPLAY, so it can 
 		// not be done on images alone, but only on images which have a display
@@ -90,11 +101,11 @@ Class CAutoActOnImageUpdate
 		{
 			imageDisplay disp = img.ImageGetImageDisplay(0)
 			KeyListenerID = disp.ImageDisplayAddKeyHandler( self, "KeyListenAction" )
-			userMessage += "\nPress <SPACE> to stop." 
+			userMessage += "\nPress <SPACE> to stop.\n" 
 		}
 		
 		// Inform the user on start
-		OKDialog( userMessage )
+		Result( userMessage )
 		return self
 	}
 	
@@ -117,7 +128,7 @@ Class CAutoActOnImageUpdate
 		
 		if (totalSaves != -1)
 		{
-			if(mod(i,skip)==0 && numSaved <= totalSaves)
+			if((mod(i,skip)==0 || skip == 0) && numSaved <= totalSaves)
 			{
 				Frame=Frame+1
 				//Add tag to cloned image with elapsed time in seconds
@@ -133,7 +144,7 @@ Class CAutoActOnImageUpdate
 				string ISFilePath=PathExtractDirectory(FileName,0)
 						if(!DoesDirectoryExist(ISFilePath))		CreateDirectory(ISFilePath)
 				// Now save the cloneImg into IS Dataset
-				Result(GetTime(1)+": Saving updated frame: " + fileName )
+				Result(GetTime(1)+": Saving updated frame: " + fileName + "\n")
 				Try
 				{
 					cloneImg.SaveAsGatan( fileName )
@@ -149,7 +160,7 @@ Class CAutoActOnImageUpdate
 		}
 		else
 		{
-			if(mod(i,skip)==0)
+			if(mod(i,skip)==0 || skip == 0)
 			{
 				Frame=Frame+1
 				//Add tag to cloned image with elapsed time in seconds
@@ -165,7 +176,7 @@ Class CAutoActOnImageUpdate
 				string ISFilePath=PathExtractDirectory(FileName,0)
 						if(!DoesDirectoryExist(ISFilePath))		CreateDirectory(ISFilePath)
 				// Now save the cloneImg into IS Dataset
-				Result(GetTime(1)+": Saving updated frame: " + fileName )
+				Result(GetTime(1)+": Saving updated frame: " + fileName + "\n")
 				Try
 				{
 					cloneImg.SaveAsGatan( fileName )

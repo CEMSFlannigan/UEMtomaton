@@ -1245,7 +1245,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->SII_total_Saves->Size = System::Drawing::Size(100, 20);
 			this->SII_total_Saves->TabIndex = 9;
 			this->SII_total_Saves->Text = L"-1";
-			this->SII_total_Saves->TextChanged += gcnew System::EventHandler(this, &UEMAuto::SII_total_Saves_TextChanged);
+			this->SII_total_Saves->LostFocus += gcnew System::EventHandler(this, &UEMAuto::SII_total_Saves_TextChanged);
 			// 
 			// selectiveInSitu
 			// 
@@ -1292,7 +1292,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->SII_skipped->Size = System::Drawing::Size(100, 20);
 			this->SII_skipped->TabIndex = 5;
 			this->SII_skipped->Text = L"0";
-			this->SII_skipped->TextChanged += gcnew System::EventHandler(this, &UEMAuto::SII_skipped_TextChanged);
+			this->SII_skipped->LostFocus += gcnew System::EventHandler(this, &UEMAuto::SII_skipped_TextChanged);
 			// 
 			// SII_time_Between
 			// 
@@ -1311,7 +1311,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->SII_acq_Time->Size = System::Drawing::Size(100, 20);
 			this->SII_acq_Time->TabIndex = 3;
 			this->SII_acq_Time->Text = L"-1";
-			this->SII_acq_Time->TextChanged += gcnew System::EventHandler(this, &UEMAuto::SII_acq_Time_TextChanged);
+			this->SII_acq_Time->LostFocus += gcnew System::EventHandler(this, &UEMAuto::SII_acq_Time_TextChanged);
 			// 
 			// label13
 			// 
@@ -1589,8 +1589,6 @@ private: System::Windows::Forms::Label^ versionNumber;
 				upStat = gcnew String("Camera data communicating.\r\n");
 				this->statusWindow->AppendText(upStat);
 			}
-
-			this->trackTime->RunWorkerAsync();
 			
 			if (delayConnected == 0)
 			{
@@ -1623,7 +1621,6 @@ private: System::Windows::Forms::Label^ versionNumber;
 				}
 
 				this->scanRunner->RunWorkerAsync(); // run the scan-thread
-
 				this->delayValueUpdater->RunWorkerAsync();
 			}
 			else
@@ -1631,6 +1628,8 @@ private: System::Windows::Forms::Label^ versionNumber;
 				this->statusWindow->AppendText("Delay stage already connected.\r\n");
 				this->scanRunner->RunWorkerAsync(); // run the scan-thread
 			}
+
+			this->trackTime->RunWorkerAsync();
 	
 			this->statusWindow->AppendText("Ready for scan.\r\n");
 
@@ -1936,7 +1935,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 
 				connectHealth = send(delaycomm_client, dc_buffer, sizeof(dc_buffer), 0);
 
-				if (connectHealth = SOCKET_ERROR)
+				if (connectHealth == SOCKET_ERROR)
 				{
 					cleanupSockets();
 					cleanupSoloist();
@@ -1966,7 +1965,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 
 				connectHealth = send(delaycomm_client, dc_buffer, sizeof(dc_buffer), 0);
 
-				if (connectHealth = SOCKET_ERROR)
+				if (connectHealth == SOCKET_ERROR)
 				{
 					cleanupSockets();
 					cleanupSoloist();
@@ -2763,6 +2762,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 					cleanupSockets();
 					cleanupSoloist();
 					this->BeginInvoke(gcnew scanRunStop(this, &UEMAuto::stopScanRun));
+					this->BeginInvoke(gcnew UpdateDelStatus(this, &UEMAuto::DelStatUpdater), gcnew String("scanRunner.\n"));
 				}
 
 				if (cc_buffer[0] == '1')
@@ -2806,12 +2806,16 @@ private: System::Windows::Forms::Label^ versionNumber;
 					if (!SoloistMotionMoveAbs(handle, curDistPoint, std::stod(msclr::interop::marshal_as<std::string>(this->delaySpd->Text))))
 					{
 						cleanupSoloist();
+						this->BeginInvoke(gcnew scanRunStop(this, &UEMAuto::stopScanRun));
+						this->BeginInvoke(gcnew UpdateDelStatus(this, &UEMAuto::DelStatUpdater), gcnew String("scanRunner.\n"));
 					}
 					else
 					{
 						if (!SoloistMotionWaitForMotionDone(handle, WAITOPTION_MoveDone, -1, NULL))
 						{
 							cleanupSoloist();
+							this->BeginInvoke(gcnew scanRunStop(this, &UEMAuto::stopScanRun));
+							this->BeginInvoke(gcnew UpdateDelStatus(this, &UEMAuto::DelStatUpdater), gcnew String("scanRunner.\n"));
 						}
 					}
 					
@@ -2826,6 +2830,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 						cleanupSockets();
 						cleanupSoloist();
 						this->BeginInvoke(gcnew scanRunStop(this, &UEMAuto::stopScanRun));
+						this->BeginInvoke(gcnew UpdateDelStatus(this, &UEMAuto::DelStatUpdater), gcnew String("scanRunner.\n"));
 					}
 
 					memset(cc_buffer, 0, sizeof(cc_buffer));
@@ -3045,6 +3050,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 				if (!SoloistStatusGetItem(handle, STATUSITEM_PositionFeedback, &positionFeedback))
 				{
 					this->BeginInvoke(gcnew killDelUpdater(this, &UEMAuto::delKillUpdater));
+					this->BeginInvoke(gcnew UpdateDelStatus(this, &UEMAuto::DelStatUpdater), gcnew String("delayValueUpdater.\n"));
 					cleanupSoloist();
 				}
 				curdelTime = (positionFeedback - curZero) * mm_to_ps;
@@ -3337,7 +3343,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 			upStat = "Updating DM communication for selective in situe mode.\r\n";
 			this->SII_status_box->AppendText(upStat);
 			// UPDATE CAMERA COMMUNICATION DOCUMENT
-			SIICommWriter.WriteData("1", "1","1", "1", "1"); //"X:\\TestFile\\SIIFileInput.txt", msclr::interop::marshal_as<std::string>(this->filepathSelInSitu->Text), msclr::interop::marshal_as<std::string>(this->filebaseSelInSitu->Text), std::to_string(SII_images_skipped), std::to_string(SII_total_saves)
+			SIICommWriter.WriteData("X:\\TestFile\\SIIFileInput.txt", msclr::interop::marshal_as<std::string>(this->filepathSelInSitu->Text), msclr::interop::marshal_as<std::string>(this->filebaseSelInSitu->Text), std::to_string(SII_images_skipped), std::to_string(SII_total_saves)); //"X:\\TestFile\\SIIFileInput.txt", msclr::interop::marshal_as<std::string>(this->filepathSelInSitu->Text), msclr::interop::marshal_as<std::string>(this->filebaseSelInSitu->Text), std::to_string(SII_images_skipped), std::to_string(SII_total_saves)
 
 			hWnd = FindWindow(NULL, L"DigitalMicrograph");
 			if (hWnd) {
