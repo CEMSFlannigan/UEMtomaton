@@ -6,3 +6,6 @@ UEMtomaton is copyrighted by the Regents of the University of Minnesota. It can 
 As unestablished research software, this code is provided on an "as is'' basis without warranty of any kind, either expressed or implied. The downloading, or executing any part of this software constitutes an implicit agreement to these terms. These terms and conditions are subject to change at any time without prior notice.
 
 Users interested in creating modifications/derivatives of UEMtomaton are requested to execute the online license provided on this page: https://license.umn.edu/product/software-for-automating-image-acquisition-in-electron-microscope
+
+In using this software, we ask that you cite the following journal article: 
+“Du, Daniel X., Spencer A. Reisbick, and David J. Flannigan. "UEMtomaton: A Source-Available Platform to Aid in Start-up of Ultrafast Electron Microscopy Labs." Ultramicroscopy 223 (2021): 113235.”
