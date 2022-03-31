@@ -3,3 +3,7 @@ C:\Users\ddu00001\Desktop\UEMtomaton\Debug\UEMtomaton.UEMAuto.resources
 C:\Users\ddu00001\Desktop\UEMtomaton\Debug\UEMtamaton.vcxproj.GenerateResource.cache
 C:\Users\ddu00001\Desktop\UEMtomaton\Debug\UEMtomaton.exe
 C:\Users\ddu00001\Desktop\UEMtomaton\Debug\UEMtomaton.pdb
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\Debug\UEMtamaton.vcxproj.SuggestedBindingRedirects.cache
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\Debug\UEMtomaton.UEMAuto.resources
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\Debug\UEMtamaton.vcxproj.GenerateResource.cache
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\Debug\UEMtomaton.exe

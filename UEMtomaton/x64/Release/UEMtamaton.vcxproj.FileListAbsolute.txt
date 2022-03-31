@@ -2,3 +2,8 @@ C:\Users\ddu00001\Desktop\UEMtomaton\x64\Release\UEMtomaton.UEMAuto.resources
 C:\Users\ddu00001\Desktop\UEMtomaton\x64\Release\UEMtamaton.vcxproj.GenerateResource.cache
 C:\Users\ddu00001\Desktop\UEMtomaton\x64\Release\UEMtomaton.exe
 C:\Users\ddu00001\Desktop\UEMtomaton\x64\Release\UEMtamaton.vcxprojAssemblyReference.cache
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\x64\Release\UEMtamaton.vcxproj.AssemblyReference.cache
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\x64\Release\UEMtamaton.vcxproj.SuggestedBindingRedirects.cache
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\x64\Release\UEMtomaton.UEMAuto.resources
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\x64\Release\UEMtamaton.vcxproj.GenerateResource.cache
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\x64\Release\UEMtomaton.exe

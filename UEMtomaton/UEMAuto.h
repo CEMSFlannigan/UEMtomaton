@@ -26,6 +26,7 @@
 #include "WriteDMComm.h"
 #include "WriteSII.h"
 #include "WriteSettings.h"
+#include "WindowFinder.h"
 #include "Soloist.h"
 
 /* -------------------------------GLOBAL VARIABLE DECLARATIONS-------------------------------------- */
@@ -1537,6 +1538,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 #pragma endregion
 
 
+
 		/* ServInitButton_Click
 			Function that will initialize the server. Intended for delay-stage side.
 
@@ -1642,11 +1644,66 @@ private: System::Windows::Forms::Label^ versionNumber;
 			WSACleanup();
 		}
 
+		/*
+		*/
+		static BOOL CALLBACK FindTheDesiredWnd(HWND hWnd, LPARAM lParam)
+		{
+			int length = ::GetWindowTextLength(hWnd);
+			TCHAR* windowBuffer;
+			windowBuffer = new TCHAR[length + 1];
+			memset(windowBuffer, 0, (length + 1) * sizeof(TCHAR));
+			GetWindowText(hWnd, windowBuffer, length + 1);
+			std::string windowTitle;
+			std::wstring wStr = windowBuffer;
+			windowTitle = std::string(wStr.begin(), wStr.end());
+			std::string checkTitle = "DigitalMicrograph";
+			if (windowTitle.find(checkTitle) != std::string::npos)
+			{
+				*(reinterpret_cast<HWND*>(lParam)) = hWnd;
+				return FALSE; // stop enumerating
+			}
+			return TRUE; // keep enumerating
+		}
 		/* RunScan_Click
 			Begins a scan containing the experimental time point array. Sends a signal to the camera computer that a scan has begun as well.
 		*/
 		private: System::Void RunScan_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
+			HWND hFoundWnd = NULL;
+			WindowSearcher finder;
+			hFoundWnd = finder.FocusWindow();
+			if (hFoundWnd != NULL)
+			{
+				// move to foreground
+				this->WindowState = System::Windows::Forms::FormWindowState::Minimized;
+				this->WindowState = System::Windows::Forms::FormWindowState::Normal; // this is the dumbest hack I've tried and I'm almost ashamed it works. Almost.
+				//SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+				SetForegroundWindowInternal(hFoundWnd);
+				//SetActiveWindow(hWnd);
+
+				this->PressKey(VK_F10);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_RIGHT);
+				this->PressKey(VK_DOWN);
+				this->PressKey(VK_DOWN);
+				this->PressKey(VK_RETURN);
+
+				System::Threading::Thread::Sleep(30);
+
+				this->WindowState = System::Windows::Forms::FormWindowState::Minimized;
+				this->WindowState = System::Windows::Forms::FormWindowState::Normal; // facepalm
+			}
+			else
+			{
+				String^ upStat = gcnew String("Window containing DigitalMicrograph title was not found.\r\n");
+				this->camStat->AppendText(upStat);
+			}
 
 			runStat = 1; // set state of run to running
 
@@ -2349,46 +2406,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 
 			std::string timeVal;
 
-			HWND hWnd;
 			int timeout = 3600 * 4;
 			int totImages = totPoints * (repeatValue + 1); // The total number of images including the number of times the scan is to be repeated.
 
 			this->BeginInvoke(gcnew DelRunGridClear(this, &UEMAuto::DelGridRunClear));
-
-			hWnd = FindWindow(NULL, L"DigitalMicrograph");
-			if (hWnd) 
-			{
-				// move to foreground
-				this->WindowState = System::Windows::Forms::FormWindowState::Minimized;
-				this->WindowState = System::Windows::Forms::FormWindowState::Normal; // this is the dumbest hack I've tried and I'm almost ashamed it works. Almost.
-				//SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-				SetForegroundWindowInternal(hWnd);
-				//SetActiveWindow(hWnd);
-
-				this->PressKey(VK_F10);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_DOWN);
-				this->PressKey(VK_DOWN);
-				this->PressKey(VK_RETURN);
-
-				System::Threading::Thread::Sleep(30);
-
-				this->WindowState = System::Windows::Forms::FormWindowState::Minimized;
-				this->WindowState = System::Windows::Forms::FormWindowState::Normal; // facepalm
-
-			}
-			else
-			{
-				upStat = gcnew String("DM was not found.\r\n");
-				this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
-			}
 
 			do
 			{
@@ -2510,7 +2531,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 						upStat = "Updating DM communication for step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\r\n";
 						this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 						// UPDATE CAMERA COMMUNICATION DOCUMENT
-						dmCommWriter.WriteData("X:\\TestFile\\InputFileTest.txt", msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::string(units), std::to_string(curScanStep + 1), msclr::interop::marshal_as<std::string>(delayText), std::to_string(curScan));
+						dmCommWriter.WriteData("C:\\InputFileTest.txt", msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::string(units), std::to_string(curScanStep + 1), msclr::interop::marshal_as<std::string>(delayText), std::to_string(curScan));
 
 						upStat = "Updating ULG file for step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\r\n";
 						this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
@@ -2634,7 +2655,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 					upStat = "Updating DM communication for step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\r\n";
 					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
 					// UPDATE CAMERA COMMUNICATION DOCUMENT
-					dmCommWriter.WriteData("X:\\TestFile\\InputFileTest.txt", msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::string(units), std::to_string(curScanStep + 1), msclr::interop::marshal_as<std::string>(delayText), std::to_string(curScan));
+					dmCommWriter.WriteData("C:\\InputFileTest.txt", msclr::interop::marshal_as<std::string>(this->fileSavePath->Text), msclr::interop::marshal_as<std::string>(this->fileNameBase->Text), std::string(units), std::to_string(curScanStep + 1), msclr::interop::marshal_as<std::string>(delayText), std::to_string(curScan));
 
 					upStat = "Updating ULG file for step " + gcnew String(std::to_string(curStep + 1).c_str()) + ".\r\n";
 					this->BeginInvoke(gcnew UpdateCamStatus(this, &UEMAuto::CamStatUpdater), upStat);
@@ -3337,21 +3358,25 @@ private: System::Windows::Forms::Label^ versionNumber;
 			
 			String^ upStat;
 			HWND hWnd;
+			HWND hWnd2;
 
 			WriteSII SIICommWriter;
 
 			upStat = "Updating DM communication for selective in situe mode.\r\n";
 			this->SII_status_box->AppendText(upStat);
 			// UPDATE CAMERA COMMUNICATION DOCUMENT
-			SIICommWriter.WriteData("X:\\TestFile\\SIIFileInput.txt", msclr::interop::marshal_as<std::string>(this->filepathSelInSitu->Text), msclr::interop::marshal_as<std::string>(this->filebaseSelInSitu->Text), std::to_string(SII_images_skipped), std::to_string(SII_total_saves)); //"X:\\TestFile\\SIIFileInput.txt", msclr::interop::marshal_as<std::string>(this->filepathSelInSitu->Text), msclr::interop::marshal_as<std::string>(this->filebaseSelInSitu->Text), std::to_string(SII_images_skipped), std::to_string(SII_total_saves)
+			SIICommWriter.WriteData("C:\\SIIFileInput.txt", msclr::interop::marshal_as<std::string>(this->filepathSelInSitu->Text), msclr::interop::marshal_as<std::string>(this->filebaseSelInSitu->Text), std::to_string(SII_images_skipped), std::to_string(SII_total_saves)); //"C:\\TestFile\\SIIFileInput.txt", msclr::interop::marshal_as<std::string>(this->filepathSelInSitu->Text), msclr::interop::marshal_as<std::string>(this->filebaseSelInSitu->Text), std::to_string(SII_images_skipped), std::to_string(SII_total_saves)
 
-			hWnd = FindWindow(NULL, L"DigitalMicrograph");
-			if (hWnd) {
+			HWND hFoundWnd = NULL;
+			WindowSearcher finder;
+			hFoundWnd = finder.FocusWindow();
+			if (hFoundWnd != NULL)
+			{
 				// move to foreground
 				this->WindowState = System::Windows::Forms::FormWindowState::Minimized;
 				this->WindowState = System::Windows::Forms::FormWindowState::Normal; // this is the dumbest hack I've tried and I'm almost ashamed it works. Almost.
 				//SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-				SetForegroundWindowInternal(hWnd);
+				SetForegroundWindowInternal(hFoundWnd);
 				//SetActiveWindow(hWnd);
 
 				this->PressKey(VK_F10);
@@ -3364,7 +3389,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 				this->PressKey(VK_RIGHT);
 				this->PressKey(VK_RIGHT);
 				this->PressKey(VK_DOWN);
-				this->PressKey(VK_DOWN); 
+				this->PressKey(VK_DOWN);
 				this->PressKey(VK_DOWN);
 				this->PressKey(VK_DOWN);
 				this->PressKey(VK_RETURN);
@@ -3373,12 +3398,11 @@ private: System::Windows::Forms::Label^ versionNumber;
 
 				this->WindowState = System::Windows::Forms::FormWindowState::Minimized;
 				this->WindowState = System::Windows::Forms::FormWindowState::Normal; // facepalm
-
 			}
 			else
 			{
-				upStat = gcnew String("DM was not found.\r\n");
-				this->SII_status_box->AppendText(upStat);
+				String^ upStat = gcnew String("Window containing \"DigitalMicrograph\" title was not found.\r\n");
+				this->camStat->AppendText(upStat);
 			}
 
 		}
