@@ -20,7 +20,7 @@ Parameters:
 
 */
 
-void WriteSettings::WriteSet(std::string FileName, std::string val1, std::string val2, std::string val3)
+void WriteSettings::WriteSet(std::string FileName, std::string val1, std::string val2, std::string val3, std::string val4, std::string val5, std::string val6)
 {
 
 	std::ofstream OpenFile;
@@ -29,7 +29,10 @@ void WriteSettings::WriteSet(std::string FileName, std::string val1, std::string
 
 	OpenFile << val1 + "\n\0";
 	OpenFile << val2 + "\n\0";
-	OpenFile << val3;
+	OpenFile << val3 + "\n\0";
+	OpenFile << val4 + "\n\0";
+	OpenFile << val5 + "\n\0";
+	OpenFile << val6 + "\n\0";
 
 	OpenFile.close();
 

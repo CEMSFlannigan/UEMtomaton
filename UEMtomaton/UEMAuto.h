@@ -353,6 +353,15 @@ private: System::Windows::Forms::TextBox^ SII_acq_Time;
 private: System::Windows::Forms::Label^ label23;
 private: System::Windows::Forms::TextBox^ SII_status_box;
 private: System::Windows::Forms::Label^ versionNumber;
+private: System::Windows::Forms::GroupBox^ groupBox2;
+
+private: System::Windows::Forms::Label^ label25;
+private: System::Windows::Forms::TextBox^ customMenuIndex;
+
+private: System::Windows::Forms::Label^ label24;
+private: System::Windows::Forms::TextBox^ selectiveInSituIndex;
+private: System::Windows::Forms::Label^ label26;
+private: System::Windows::Forms::TextBox^ scanScriptIndex;
 
 
 
@@ -374,11 +383,11 @@ private: System::Windows::Forms::Label^ versionNumber;
 		/// Required method for Designer support
 		void InitializeComponent(void)
 		{
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle11 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle12 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle13 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle14 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle15 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(UEMAuto::typeid));
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->BottomToolStripPanel = (gcnew System::Windows::Forms::ToolStripPanel());
@@ -459,6 +468,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->SII_acq_Time = (gcnew System::Windows::Forms::TextBox());
 			this->label13 = (gcnew System::Windows::Forms::Label());
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
+			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->label25 = (gcnew System::Windows::Forms::Label());
+			this->customMenuIndex = (gcnew System::Windows::Forms::TextBox());
+			this->label24 = (gcnew System::Windows::Forms::Label());
 			this->loadSettingsButton = (gcnew System::Windows::Forms::Button());
 			this->DefaultSettingsRestore = (gcnew System::Windows::Forms::Button());
 			this->SaveSettingsButton = (gcnew System::Windows::Forms::Button());
@@ -478,6 +491,9 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->cameraRunner = (gcnew System::ComponentModel::BackgroundWorker());
 			this->delayValueUpdater = (gcnew System::ComponentModel::BackgroundWorker());
 			this->versionNumber = (gcnew System::Windows::Forms::Label());
+			this->scanScriptIndex = (gcnew System::Windows::Forms::TextBox());
+			this->label26 = (gcnew System::Windows::Forms::Label());
+			this->selectiveInSituIndex = (gcnew System::Windows::Forms::TextBox());
 			this->cameraTab->SuspendLayout();
 			this->tabPage2->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->DataReadouts))->BeginInit();
@@ -486,6 +502,7 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->groupBox1->SuspendLayout();
 			this->tabPage3->SuspendLayout();
 			this->tabPage1->SuspendLayout();
+			this->groupBox2->SuspendLayout();
 			this->GeneralSettingsBox->SuspendLayout();
 			this->DelaySettingsBox->SuspendLayout();
 			this->CameraSettingsBox->SuspendLayout();
@@ -496,9 +513,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->label1->AutoSize = true;
 			this->label1->Font = (gcnew System::Drawing::Font(L"Arial", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label1->Location = System::Drawing::Point(12, 9);
+			this->label1->Location = System::Drawing::Point(18, 14);
+			this->label1->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(150, 22);
+			this->label1->Size = System::Drawing::Size(231, 33);
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"UEM Automation";
 			// 
@@ -544,10 +562,11 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->cameraTab->Controls->Add(this->delayTab);
 			this->cameraTab->Controls->Add(this->tabPage3);
 			this->cameraTab->Controls->Add(this->tabPage1);
-			this->cameraTab->Location = System::Drawing::Point(16, 54);
+			this->cameraTab->Location = System::Drawing::Point(24, 83);
+			this->cameraTab->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->cameraTab->Name = L"cameraTab";
 			this->cameraTab->SelectedIndex = 0;
-			this->cameraTab->Size = System::Drawing::Size(796, 610);
+			this->cameraTab->Size = System::Drawing::Size(1194, 938);
 			this->cameraTab->TabIndex = 1;
 			// 
 			// tabPage2
@@ -581,19 +600,21 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->tabPage2->Controls->Add(this->label6);
 			this->tabPage2->Controls->Add(this->disconCam);
 			this->tabPage2->Controls->Add(this->ServConnButton);
-			this->tabPage2->Location = System::Drawing::Point(4, 22);
+			this->tabPage2->Location = System::Drawing::Point(4, 29);
+			this->tabPage2->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->tabPage2->Name = L"tabPage2";
-			this->tabPage2->Padding = System::Windows::Forms::Padding(3);
-			this->tabPage2->Size = System::Drawing::Size(788, 584);
+			this->tabPage2->Padding = System::Windows::Forms::Padding(4, 5, 4, 5);
+			this->tabPage2->Size = System::Drawing::Size(1186, 905);
 			this->tabPage2->TabIndex = 1;
 			this->tabPage2->Text = L"Camera Side";
 			this->tabPage2->UseVisualStyleBackColor = true;
 			// 
 			// RepeatBox
 			// 
-			this->RepeatBox->Location = System::Drawing::Point(109, 150);
+			this->RepeatBox->Location = System::Drawing::Point(164, 231);
+			this->RepeatBox->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->RepeatBox->Name = L"RepeatBox";
-			this->RepeatBox->Size = System::Drawing::Size(33, 20);
+			this->RepeatBox->Size = System::Drawing::Size(48, 26);
 			this->RepeatBox->TabIndex = 24;
 			this->RepeatBox->Text = L"0";
 			this->RepeatBox->LostFocus += gcnew System::EventHandler(this, &UEMAuto::RepeatBox_TextChanged);
@@ -601,9 +622,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// RepeatLabel
 			// 
 			this->RepeatLabel->AutoSize = true;
-			this->RepeatLabel->Location = System::Drawing::Point(25, 153);
+			this->RepeatLabel->Location = System::Drawing::Point(38, 235);
+			this->RepeatLabel->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->RepeatLabel->Name = L"RepeatLabel";
-			this->RepeatLabel->Size = System::Drawing::Size(78, 13);
+			this->RepeatLabel->Size = System::Drawing::Size(115, 20);
 			this->RepeatLabel->TabIndex = 23;
 			this->RepeatLabel->Text = L"Repeat Scans:";
 			// 
@@ -611,74 +633,84 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			this->DataReadouts->AllowUserToAddRows = false;
 			this->DataReadouts->AllowUserToDeleteRows = false;
-			dataGridViewCellStyle11->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle11->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle11->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle11->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle11->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle11->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle11->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->DataReadouts->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle11;
+			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->DataReadouts->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			this->DataReadouts->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->DataReadouts->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {
 				this->Step, this->Timepoint,
 					this->DelayPos, this->delayStatus
 			});
-			dataGridViewCellStyle12->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle12->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle12->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle12->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle12->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle12->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle12->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
-			this->DataReadouts->DefaultCellStyle = dataGridViewCellStyle12;
-			this->DataReadouts->Location = System::Drawing::Point(194, 211);
+			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
+			this->DataReadouts->DefaultCellStyle = dataGridViewCellStyle2;
+			this->DataReadouts->Location = System::Drawing::Point(291, 325);
+			this->DataReadouts->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->DataReadouts->Name = L"DataReadouts";
 			this->DataReadouts->ReadOnly = true;
-			dataGridViewCellStyle13->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle13->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle13->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle13->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle13->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle13->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle13->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->DataReadouts->RowHeadersDefaultCellStyle = dataGridViewCellStyle13;
-			this->DataReadouts->Size = System::Drawing::Size(575, 223);
+			dataGridViewCellStyle3->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle3->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle3->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle3->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->DataReadouts->RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+			this->DataReadouts->RowHeadersWidth = 62;
+			this->DataReadouts->Size = System::Drawing::Size(862, 343);
 			this->DataReadouts->TabIndex = 8;
 			// 
 			// Step
 			// 
 			this->Step->HeaderText = L"Step";
+			this->Step->MinimumWidth = 8;
 			this->Step->Name = L"Step";
 			this->Step->ReadOnly = true;
+			this->Step->Width = 150;
 			// 
 			// Timepoint
 			// 
 			this->Timepoint->HeaderText = L"Timepoint (ps)";
+			this->Timepoint->MinimumWidth = 8;
 			this->Timepoint->Name = L"Timepoint";
 			this->Timepoint->ReadOnly = true;
+			this->Timepoint->Width = 150;
 			// 
 			// DelayPos
 			// 
 			this->DelayPos->HeaderText = L"Delay Stage Position (mm)";
+			this->DelayPos->MinimumWidth = 8;
 			this->DelayPos->Name = L"DelayPos";
 			this->DelayPos->ReadOnly = true;
+			this->DelayPos->Width = 150;
 			// 
 			// delayStatus
 			// 
 			this->delayStatus->HeaderText = L"Status";
+			this->delayStatus->MinimumWidth = 8;
 			this->delayStatus->Name = L"delayStatus";
 			this->delayStatus->ReadOnly = true;
 			this->delayStatus->Width = 230;
 			// 
 			// stopButton
 			// 
-			this->stopButton->Location = System::Drawing::Point(18, 534);
+			this->stopButton->Location = System::Drawing::Point(27, 822);
+			this->stopButton->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->stopButton->Name = L"stopButton";
-			this->stopButton->Size = System::Drawing::Size(69, 31);
+			this->stopButton->Size = System::Drawing::Size(104, 48);
 			this->stopButton->TabIndex = 22;
 			this->stopButton->Text = L"Stop Run";
 			this->stopButton->UseVisualStyleBackColor = true;
@@ -687,9 +719,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// pauseButton
 			// 
 			this->pauseButton->ForeColor = System::Drawing::Color::Black;
-			this->pauseButton->Location = System::Drawing::Point(698, 150);
+			this->pauseButton->Location = System::Drawing::Point(1047, 231);
+			this->pauseButton->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->pauseButton->Name = L"pauseButton";
-			this->pauseButton->Size = System::Drawing::Size(32, 23);
+			this->pauseButton->Size = System::Drawing::Size(48, 35);
 			this->pauseButton->TabIndex = 21;
 			this->pauseButton->Text = L"| |";
 			this->pauseButton->UseVisualStyleBackColor = true;
@@ -697,9 +730,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			// runScan
 			// 
-			this->runScan->Location = System::Drawing::Point(663, 87);
+			this->runScan->Location = System::Drawing::Point(994, 134);
+			this->runScan->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->runScan->Name = L"runScan";
-			this->runScan->Size = System::Drawing::Size(106, 51);
+			this->runScan->Size = System::Drawing::Size(159, 78);
 			this->runScan->TabIndex = 6;
 			this->runScan->Text = L"5. Run Scan";
 			this->runScan->UseVisualStyleBackColor = true;
@@ -707,9 +741,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			// playRun
 			// 
-			this->playRun->Location = System::Drawing::Point(737, 150);
+			this->playRun->Location = System::Drawing::Point(1106, 231);
+			this->playRun->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->playRun->Name = L"playRun";
-			this->playRun->Size = System::Drawing::Size(32, 23);
+			this->playRun->Size = System::Drawing::Size(48, 35);
 			this->playRun->TabIndex = 20;
 			this->playRun->Text = L">";
 			this->playRun->UseVisualStyleBackColor = true;
@@ -718,9 +753,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// randomPoints
 			// 
 			this->randomPoints->AutoSize = true;
-			this->randomPoints->Location = System::Drawing::Point(524, 105);
+			this->randomPoints->Location = System::Drawing::Point(786, 162);
+			this->randomPoints->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->randomPoints->Name = L"randomPoints";
-			this->randomPoints->Size = System::Drawing::Size(133, 17);
+			this->randomPoints->Size = System::Drawing::Size(197, 24);
 			this->randomPoints->TabIndex = 5;
 			this->randomPoints->Text = L"Randomize Timepoints";
 			this->randomPoints->UseVisualStyleBackColor = true;
@@ -728,9 +764,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			// MakeTimeButton
 			// 
-			this->MakeTimeButton->Location = System::Drawing::Point(394, 87);
+			this->MakeTimeButton->Location = System::Drawing::Point(591, 134);
+			this->MakeTimeButton->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->MakeTimeButton->Name = L"MakeTimeButton";
-			this->MakeTimeButton->Size = System::Drawing::Size(124, 51);
+			this->MakeTimeButton->Size = System::Drawing::Size(186, 78);
 			this->MakeTimeButton->TabIndex = 3;
 			this->MakeTimeButton->Text = L"4. Make Timepoints";
 			this->MakeTimeButton->UseVisualStyleBackColor = true;
@@ -739,9 +776,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// timeRemLab
 			// 
 			this->timeRemLab->AutoSize = true;
-			this->timeRemLab->Location = System::Drawing::Point(284, 153);
+			this->timeRemLab->Location = System::Drawing::Point(426, 235);
+			this->timeRemLab->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->timeRemLab->Name = L"timeRemLab";
-			this->timeRemLab->Size = System::Drawing::Size(38, 13);
+			this->timeRemLab->Size = System::Drawing::Size(55, 20);
 			this->timeRemLab->TabIndex = 19;
 			this->timeRemLab->Text = L"0 secs";
 			// 
@@ -749,35 +787,38 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			this->TimePoints->AllowUserToAddRows = false;
 			this->TimePoints->AllowUserToDeleteRows = false;
-			dataGridViewCellStyle14->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle14->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle14->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle4->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle4->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle14->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle14->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle14->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle14->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->TimePoints->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle14;
+			dataGridViewCellStyle4->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle4->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle4->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle4->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->TimePoints->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
 			this->TimePoints->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->TimePoints->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(1) { this->TimepointList });
-			dataGridViewCellStyle15->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle15->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle15->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle5->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle15->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle15->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle15->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle15->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
-			this->TimePoints->DefaultCellStyle = dataGridViewCellStyle15;
-			this->TimePoints->Location = System::Drawing::Point(18, 211);
+			dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
+			this->TimePoints->DefaultCellStyle = dataGridViewCellStyle5;
+			this->TimePoints->Location = System::Drawing::Point(27, 325);
+			this->TimePoints->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->TimePoints->Name = L"TimePoints";
 			this->TimePoints->ReadOnly = true;
-			this->TimePoints->Size = System::Drawing::Size(170, 223);
+			this->TimePoints->RowHeadersWidth = 62;
+			this->TimePoints->Size = System::Drawing::Size(255, 343);
 			this->TimePoints->TabIndex = 4;
 			// 
 			// TimepointList
 			// 
 			this->TimepointList->HeaderText = L"Timepoints (ps)";
+			this->TimepointList->MinimumWidth = 8;
 			this->TimepointList->Name = L"TimepointList";
 			this->TimepointList->ReadOnly = true;
 			this->TimepointList->Width = 125;
@@ -785,18 +826,20 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// tRT
 			// 
 			this->tRT->AutoSize = true;
-			this->tRT->Location = System::Drawing::Point(148, 153);
+			this->tRT->Location = System::Drawing::Point(222, 235);
+			this->tRT->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->tRT->Name = L"tRT";
-			this->tRT->Size = System::Drawing::Size(140, 13);
+			this->tRT->Size = System::Drawing::Size(210, 20);
 			this->tRT->TabIndex = 18;
 			this->tRT->Text = L"Estiimated Time Remaining: ";
 			// 
 			// nsIndicator
 			// 
 			this->nsIndicator->AutoSize = true;
-			this->nsIndicator->Location = System::Drawing::Point(351, 119);
+			this->nsIndicator->Location = System::Drawing::Point(526, 183);
+			this->nsIndicator->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->nsIndicator->Name = L"nsIndicator";
-			this->nsIndicator->Size = System::Drawing::Size(36, 17);
+			this->nsIndicator->Size = System::Drawing::Size(51, 24);
 			this->nsIndicator->TabIndex = 16;
 			this->nsIndicator->Text = L"ns";
 			this->nsIndicator->UseVisualStyleBackColor = true;
@@ -804,18 +847,20 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			// runProg
 			// 
-			this->runProg->Location = System::Drawing::Point(19, 179);
+			this->runProg->Location = System::Drawing::Point(28, 275);
+			this->runProg->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->runProg->Name = L"runProg";
-			this->runProg->Size = System::Drawing::Size(750, 23);
+			this->runProg->Size = System::Drawing::Size(1125, 35);
 			this->runProg->TabIndex = 17;
 			// 
 			// psIndicator
 			// 
 			this->psIndicator->AutoSize = true;
 			this->psIndicator->Checked = true;
-			this->psIndicator->Location = System::Drawing::Point(310, 119);
+			this->psIndicator->Location = System::Drawing::Point(465, 183);
+			this->psIndicator->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->psIndicator->Name = L"psIndicator";
-			this->psIndicator->Size = System::Drawing::Size(36, 17);
+			this->psIndicator->Size = System::Drawing::Size(51, 24);
 			this->psIndicator->TabIndex = 15;
 			this->psIndicator->TabStop = true;
 			this->psIndicator->Text = L"ps";
@@ -825,61 +870,68 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// camDelPosPS
 			// 
 			this->camDelPosPS->AutoSize = true;
-			this->camDelPosPS->Location = System::Drawing::Point(569, 47);
+			this->camDelPosPS->Location = System::Drawing::Point(854, 72);
+			this->camDelPosPS->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->camDelPosPS->Name = L"camDelPosPS";
-			this->camDelPosPS->Size = System::Drawing::Size(25, 13);
+			this->camDelPosPS->Size = System::Drawing::Size(36, 20);
 			this->camDelPosPS->TabIndex = 14;
 			this->camDelPosPS->Text = L"000";
 			// 
 			// camDelPosMM
 			// 
 			this->camDelPosMM->AutoSize = true;
-			this->camDelPosMM->Location = System::Drawing::Point(569, 22);
+			this->camDelPosMM->Location = System::Drawing::Point(854, 34);
+			this->camDelPosMM->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->camDelPosMM->Name = L"camDelPosMM";
-			this->camDelPosMM->Size = System::Drawing::Size(25, 13);
+			this->camDelPosMM->Size = System::Drawing::Size(36, 20);
 			this->camDelPosMM->TabIndex = 13;
 			this->camDelPosMM->Text = L"000";
 			// 
 			// label12
 			// 
 			this->label12->AutoSize = true;
-			this->label12->Location = System::Drawing::Point(429, 47);
+			this->label12->Location = System::Drawing::Point(644, 72);
+			this->label12->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label12->Name = L"label12";
-			this->label12->Size = System::Drawing::Size(131, 13);
+			this->label12->Size = System::Drawing::Size(195, 20);
 			this->label12->TabIndex = 12;
 			this->label12->Text = L"Delay Stage Position (ps): ";
 			// 
 			// label11
 			// 
 			this->label11->AutoSize = true;
-			this->label11->Location = System::Drawing::Point(429, 22);
+			this->label11->Location = System::Drawing::Point(644, 34);
+			this->label11->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label11->Name = L"label11";
-			this->label11->Size = System::Drawing::Size(134, 13);
+			this->label11->Size = System::Drawing::Size(200, 20);
 			this->label11->TabIndex = 11;
 			this->label11->Text = L"Delay Stage Position (nm): ";
 			// 
 			// fileNameBase
 			// 
-			this->fileNameBase->Location = System::Drawing::Point(110, 118);
+			this->fileNameBase->Location = System::Drawing::Point(165, 182);
+			this->fileNameBase->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->fileNameBase->Name = L"fileNameBase";
-			this->fileNameBase->Size = System::Drawing::Size(189, 20);
+			this->fileNameBase->Size = System::Drawing::Size(282, 26);
 			this->fileNameBase->TabIndex = 9;
 			this->fileNameBase->Text = L"Test_01";
 			// 
 			// label10
 			// 
 			this->label10->AutoSize = true;
-			this->label10->Location = System::Drawing::Point(25, 121);
+			this->label10->Location = System::Drawing::Point(38, 186);
+			this->label10->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label10->Name = L"label10";
-			this->label10->Size = System::Drawing::Size(79, 13);
+			this->label10->Size = System::Drawing::Size(119, 20);
 			this->label10->TabIndex = 8;
 			this->label10->Text = L"Filename Base:";
 			// 
 			// browseFilePath
 			// 
-			this->browseFilePath->Location = System::Drawing::Point(310, 83);
+			this->browseFilePath->Location = System::Drawing::Point(465, 128);
+			this->browseFilePath->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->browseFilePath->Name = L"browseFilePath";
-			this->browseFilePath->Size = System::Drawing::Size(75, 23);
+			this->browseFilePath->Size = System::Drawing::Size(112, 35);
 			this->browseFilePath->TabIndex = 7;
 			this->browseFilePath->Text = L"Browse";
 			this->browseFilePath->UseVisualStyleBackColor = true;
@@ -887,53 +939,59 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			// fileSavePath
 			// 
-			this->fileSavePath->Location = System::Drawing::Point(78, 85);
+			this->fileSavePath->Location = System::Drawing::Point(117, 131);
+			this->fileSavePath->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->fileSavePath->Name = L"fileSavePath";
-			this->fileSavePath->Size = System::Drawing::Size(221, 20);
+			this->fileSavePath->Size = System::Drawing::Size(330, 26);
 			this->fileSavePath->TabIndex = 6;
 			this->fileSavePath->Text = L"C:\\";
 			// 
 			// camStat
 			// 
-			this->camStat->Location = System::Drawing::Point(18, 443);
+			this->camStat->Location = System::Drawing::Point(27, 682);
+			this->camStat->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->camStat->Multiline = true;
 			this->camStat->Name = L"camStat";
 			this->camStat->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->camStat->Size = System::Drawing::Size(751, 85);
+			this->camStat->Size = System::Drawing::Size(1124, 129);
 			this->camStat->TabIndex = 5;
 			this->camStat->Text = L"Status Bar:\r\n";
 			// 
 			// label9
 			// 
 			this->label9->AutoSize = true;
-			this->label9->Location = System::Drawing::Point(25, 88);
+			this->label9->Location = System::Drawing::Point(38, 135);
+			this->label9->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label9->Name = L"label9";
-			this->label9->Size = System::Drawing::Size(47, 13);
+			this->label9->Size = System::Drawing::Size(70, 20);
 			this->label9->TabIndex = 4;
 			this->label9->Text = L"Filepath:";
 			// 
 			// servIP
 			// 
-			this->servIP->Location = System::Drawing::Point(301, 32);
+			this->servIP->Location = System::Drawing::Point(452, 49);
+			this->servIP->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->servIP->Name = L"servIP";
-			this->servIP->Size = System::Drawing::Size(100, 20);
+			this->servIP->Size = System::Drawing::Size(148, 26);
 			this->servIP->TabIndex = 3;
 			this->servIP->Text = L"192.168.0.3";
 			// 
 			// label6
 			// 
 			this->label6->AutoSize = true;
-			this->label6->Location = System::Drawing::Point(167, 35);
+			this->label6->Location = System::Drawing::Point(250, 54);
+			this->label6->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label6->Name = L"label6";
-			this->label6->Size = System::Drawing::Size(132, 13);
+			this->label6->Size = System::Drawing::Size(197, 20);
 			this->label6->TabIndex = 2;
 			this->label6->Text = L"Delay Stage Computer IP: ";
 			// 
 			// disconCam
 			// 
-			this->disconCam->Location = System::Drawing::Point(685, 534);
+			this->disconCam->Location = System::Drawing::Point(1028, 822);
+			this->disconCam->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->disconCam->Name = L"disconCam";
-			this->disconCam->Size = System::Drawing::Size(84, 31);
+			this->disconCam->Size = System::Drawing::Size(126, 48);
 			this->disconCam->TabIndex = 1;
 			this->disconCam->Text = L"Disconnect";
 			this->disconCam->UseVisualStyleBackColor = true;
@@ -942,9 +1000,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// ServConnButton
 			// 
 			this->ServConnButton->ForeColor = System::Drawing::SystemColors::ControlText;
-			this->ServConnButton->Location = System::Drawing::Point(18, 16);
+			this->ServConnButton->Location = System::Drawing::Point(27, 25);
+			this->ServConnButton->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->ServConnButton->Name = L"ServConnButton";
-			this->ServConnButton->Size = System::Drawing::Size(136, 51);
+			this->ServConnButton->Size = System::Drawing::Size(204, 78);
 			this->ServConnButton->TabIndex = 0;
 			this->ServConnButton->Text = L"3. Connect to Server";
 			this->ServConnButton->UseVisualStyleBackColor = true;
@@ -957,19 +1016,21 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->delayTab->Controls->Add(this->statusWindow);
 			this->delayTab->Controls->Add(this->groupBox1);
 			this->delayTab->Controls->Add(this->ServInitButton);
-			this->delayTab->Location = System::Drawing::Point(4, 22);
+			this->delayTab->Location = System::Drawing::Point(4, 29);
+			this->delayTab->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->delayTab->Name = L"delayTab";
-			this->delayTab->Padding = System::Windows::Forms::Padding(3);
-			this->delayTab->Size = System::Drawing::Size(788, 584);
+			this->delayTab->Padding = System::Windows::Forms::Padding(4, 5, 4, 5);
+			this->delayTab->Size = System::Drawing::Size(1186, 905);
 			this->delayTab->TabIndex = 0;
 			this->delayTab->Text = L"Delay Stage";
 			this->delayTab->UseVisualStyleBackColor = true;
 			// 
 			// delayConnect
 			// 
-			this->delayConnect->Location = System::Drawing::Point(18, 16);
+			this->delayConnect->Location = System::Drawing::Point(27, 25);
+			this->delayConnect->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->delayConnect->Name = L"delayConnect";
-			this->delayConnect->Size = System::Drawing::Size(117, 51);
+			this->delayConnect->Size = System::Drawing::Size(176, 78);
 			this->delayConnect->TabIndex = 12;
 			this->delayConnect->Text = L"1. Connect to \r\nDelay Stage";
 			this->delayConnect->UseVisualStyleBackColor = true;
@@ -977,9 +1038,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			// disconServ
 			// 
-			this->disconServ->Location = System::Drawing::Point(641, 16);
+			this->disconServ->Location = System::Drawing::Point(962, 25);
+			this->disconServ->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->disconServ->Name = L"disconServ";
-			this->disconServ->Size = System::Drawing::Size(136, 51);
+			this->disconServ->Size = System::Drawing::Size(204, 78);
 			this->disconServ->TabIndex = 11;
 			this->disconServ->Text = L"Disconnect";
 			this->disconServ->UseVisualStyleBackColor = true;
@@ -987,11 +1049,12 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			// statusWindow
 			// 
-			this->statusWindow->Location = System::Drawing::Point(18, 406);
+			this->statusWindow->Location = System::Drawing::Point(27, 625);
+			this->statusWindow->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->statusWindow->Multiline = true;
 			this->statusWindow->Name = L"statusWindow";
 			this->statusWindow->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->statusWindow->Size = System::Drawing::Size(759, 159);
+			this->statusWindow->Size = System::Drawing::Size(1136, 242);
 			this->statusWindow->TabIndex = 6;
 			this->statusWindow->Text = L"Status Updates:\r\n";
 			// 
@@ -1007,9 +1070,11 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->groupBox1->Controls->Add(this->label2);
 			this->groupBox1->Controls->Add(this->delayMovFor);
 			this->groupBox1->Controls->Add(this->delayMovBack);
-			this->groupBox1->Location = System::Drawing::Point(264, 99);
+			this->groupBox1->Location = System::Drawing::Point(396, 152);
+			this->groupBox1->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(261, 217);
+			this->groupBox1->Padding = System::Windows::Forms::Padding(4, 5, 4, 5);
+			this->groupBox1->Size = System::Drawing::Size(392, 334);
 			this->groupBox1->TabIndex = 2;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Manual Delay Stage Control";
@@ -1017,79 +1082,88 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// label8
 			// 
 			this->label8->AutoSize = true;
-			this->label8->Location = System::Drawing::Point(118, 27);
+			this->label8->Location = System::Drawing::Point(177, 42);
+			this->label8->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label8->Name = L"label8";
-			this->label8->Size = System::Drawing::Size(73, 13);
+			this->label8->Size = System::Drawing::Size(107, 20);
 			this->label8->TabIndex = 12;
 			this->label8->Text = L"Disconnected";
 			// 
 			// label7
 			// 
 			this->label7->AutoSize = true;
-			this->label7->Location = System::Drawing::Point(15, 27);
+			this->label7->Location = System::Drawing::Point(22, 42);
+			this->label7->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label7->Name = L"label7";
-			this->label7->Size = System::Drawing::Size(97, 13);
+			this->label7->Size = System::Drawing::Size(145, 20);
 			this->label7->TabIndex = 11;
 			this->label7->Text = L"Connection Status:";
 			// 
 			// delayPosDist
 			// 
 			this->delayPosDist->AutoSize = true;
-			this->delayPosDist->Location = System::Drawing::Point(97, 189);
+			this->delayPosDist->Location = System::Drawing::Point(146, 291);
+			this->delayPosDist->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->delayPosDist->Name = L"delayPosDist";
-			this->delayPosDist->Size = System::Drawing::Size(25, 13);
+			this->delayPosDist->Size = System::Drawing::Size(36, 20);
 			this->delayPosDist->TabIndex = 9;
 			this->delayPosDist->Text = L"000";
 			// 
 			// delayPosTime
 			// 
 			this->delayPosTime->AutoSize = true;
-			this->delayPosTime->Location = System::Drawing::Point(97, 163);
+			this->delayPosTime->Location = System::Drawing::Point(146, 251);
+			this->delayPosTime->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->delayPosTime->Name = L"delayPosTime";
-			this->delayPosTime->Size = System::Drawing::Size(25, 13);
+			this->delayPosTime->Size = System::Drawing::Size(36, 20);
 			this->delayPosTime->TabIndex = 8;
 			this->delayPosTime->Text = L"000";
 			// 
 			// label4
 			// 
 			this->label4->AutoSize = true;
-			this->label4->Location = System::Drawing::Point(19, 137);
+			this->label4->Location = System::Drawing::Point(28, 211);
+			this->label4->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(41, 13);
+			this->label4->Size = System::Drawing::Size(60, 20);
 			this->label4->TabIndex = 7;
 			this->label4->Text = L"Speed:";
 			// 
 			// delaySpd
 			// 
-			this->delaySpd->Location = System::Drawing::Point(66, 133);
+			this->delaySpd->Location = System::Drawing::Point(99, 205);
+			this->delaySpd->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->delaySpd->Name = L"delaySpd";
-			this->delaySpd->Size = System::Drawing::Size(36, 20);
+			this->delaySpd->Size = System::Drawing::Size(52, 26);
 			this->delaySpd->TabIndex = 6;
 			this->delaySpd->Text = L"50";
 			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(19, 189);
+			this->label3->Location = System::Drawing::Point(28, 291);
+			this->label3->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(72, 13);
+			this->label3->Size = System::Drawing::Size(109, 20);
 			this->label3->TabIndex = 4;
 			this->label3->Text = L"Position (mm):";
 			// 
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(19, 163);
+			this->label2->Location = System::Drawing::Point(28, 251);
+			this->label2->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(67, 13);
+			this->label2->Size = System::Drawing::Size(100, 20);
 			this->label2->TabIndex = 3;
 			this->label2->Text = L"Position (ps):";
 			// 
 			// delayMovFor
 			// 
-			this->delayMovFor->Location = System::Drawing::Point(135, 51);
+			this->delayMovFor->Location = System::Drawing::Point(202, 78);
+			this->delayMovFor->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->delayMovFor->Name = L"delayMovFor";
-			this->delayMovFor->Size = System::Drawing::Size(108, 73);
+			this->delayMovFor->Size = System::Drawing::Size(162, 112);
 			this->delayMovFor->TabIndex = 1;
 			this->delayMovFor->Text = L">";
 			this->delayMovFor->UseVisualStyleBackColor = true;
@@ -1098,9 +1172,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			// delayMovBack
 			// 
-			this->delayMovBack->Location = System::Drawing::Point(21, 51);
+			this->delayMovBack->Location = System::Drawing::Point(32, 78);
+			this->delayMovBack->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->delayMovBack->Name = L"delayMovBack";
-			this->delayMovBack->Size = System::Drawing::Size(108, 73);
+			this->delayMovBack->Size = System::Drawing::Size(162, 112);
 			this->delayMovBack->TabIndex = 0;
 			this->delayMovBack->Text = L"<";
 			this->delayMovBack->UseVisualStyleBackColor = true;
@@ -1109,9 +1184,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			// ServInitButton
 			// 
-			this->ServInitButton->Location = System::Drawing::Point(141, 16);
+			this->ServInitButton->Location = System::Drawing::Point(212, 25);
+			this->ServInitButton->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->ServInitButton->Name = L"ServInitButton";
-			this->ServInitButton->Size = System::Drawing::Size(136, 51);
+			this->ServInitButton->Size = System::Drawing::Size(204, 78);
 			this->ServInitButton->TabIndex = 0;
 			this->ServInitButton->Text = L"2. Initialize Server";
 			this->ServInitButton->UseVisualStyleBackColor = true;
@@ -1138,21 +1214,23 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->tabPage3->Controls->Add(this->SII_time_Between);
 			this->tabPage3->Controls->Add(this->SII_acq_Time);
 			this->tabPage3->Controls->Add(this->label13);
-			this->tabPage3->Location = System::Drawing::Point(4, 22);
+			this->tabPage3->Location = System::Drawing::Point(4, 29);
+			this->tabPage3->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->tabPage3->Name = L"tabPage3";
-			this->tabPage3->Padding = System::Windows::Forms::Padding(3);
-			this->tabPage3->Size = System::Drawing::Size(788, 584);
+			this->tabPage3->Padding = System::Windows::Forms::Padding(4, 5, 4, 5);
+			this->tabPage3->Size = System::Drawing::Size(1186, 905);
 			this->tabPage3->TabIndex = 3;
 			this->tabPage3->Text = L"Selective In Situ";
 			this->tabPage3->UseVisualStyleBackColor = true;
 			// 
 			// SII_status_box
 			// 
-			this->SII_status_box->Location = System::Drawing::Point(207, 388);
+			this->SII_status_box->Location = System::Drawing::Point(310, 597);
+			this->SII_status_box->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->SII_status_box->Multiline = true;
 			this->SII_status_box->Name = L"SII_status_box";
 			this->SII_status_box->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->SII_status_box->Size = System::Drawing::Size(565, 167);
+			this->SII_status_box->Size = System::Drawing::Size(846, 255);
 			this->SII_status_box->TabIndex = 18;
 			// 
 			// label23
@@ -1160,18 +1238,20 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->label23->AutoSize = true;
 			this->label23->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label23->Location = System::Drawing::Point(24, 223);
+			this->label23->Location = System::Drawing::Point(36, 343);
+			this->label23->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label23->Name = L"label23";
-			this->label23->Size = System::Drawing::Size(376, 64);
+			this->label23->Size = System::Drawing::Size(551, 100);
 			this->label23->TabIndex = 3;
 			this->label23->Text = resources->GetString(L"label23.Text");
 			// 
 			// SII_total_Time
 			// 
-			this->SII_total_Time->Location = System::Drawing::Point(667, 316);
+			this->SII_total_Time->Location = System::Drawing::Point(1000, 486);
+			this->SII_total_Time->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->SII_total_Time->Name = L"SII_total_Time";
 			this->SII_total_Time->ReadOnly = true;
-			this->SII_total_Time->Size = System::Drawing::Size(100, 20);
+			this->SII_total_Time->Size = System::Drawing::Size(148, 26);
 			this->SII_total_Time->TabIndex = 17;
 			this->SII_total_Time->Text = L"-1";
 			this->SII_total_Time->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
@@ -1179,35 +1259,39 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// label22
 			// 
 			this->label22->AutoSize = true;
-			this->label22->Location = System::Drawing::Point(676, 300);
+			this->label22->Location = System::Drawing::Point(1014, 462);
+			this->label22->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label22->Name = L"label22";
-			this->label22->Size = System::Drawing::Size(83, 13);
+			this->label22->Size = System::Drawing::Size(121, 20);
 			this->label22->TabIndex = 16;
 			this->label22->Text = L"Total Time (sec)";
 			this->label22->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// filebaseSelInSitu
 			// 
-			this->filebaseSelInSitu->Location = System::Drawing::Point(109, 138);
+			this->filebaseSelInSitu->Location = System::Drawing::Point(164, 212);
+			this->filebaseSelInSitu->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->filebaseSelInSitu->Name = L"filebaseSelInSitu";
-			this->filebaseSelInSitu->Size = System::Drawing::Size(189, 20);
+			this->filebaseSelInSitu->Size = System::Drawing::Size(282, 26);
 			this->filebaseSelInSitu->TabIndex = 15;
 			this->filebaseSelInSitu->Text = L"Test_01";
 			// 
 			// label20
 			// 
 			this->label20->AutoSize = true;
-			this->label20->Location = System::Drawing::Point(24, 141);
+			this->label20->Location = System::Drawing::Point(36, 217);
+			this->label20->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label20->Name = L"label20";
-			this->label20->Size = System::Drawing::Size(79, 13);
+			this->label20->Size = System::Drawing::Size(119, 20);
 			this->label20->TabIndex = 14;
 			this->label20->Text = L"Filename Base:";
 			// 
 			// browseSII
 			// 
-			this->browseSII->Location = System::Drawing::Point(309, 103);
+			this->browseSII->Location = System::Drawing::Point(464, 158);
+			this->browseSII->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->browseSII->Name = L"browseSII";
-			this->browseSII->Size = System::Drawing::Size(75, 23);
+			this->browseSII->Size = System::Drawing::Size(112, 35);
 			this->browseSII->TabIndex = 13;
 			this->browseSII->Text = L"Browse";
 			this->browseSII->UseVisualStyleBackColor = true;
@@ -1215,44 +1299,49 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			// filepathSelInSitu
 			// 
-			this->filepathSelInSitu->Location = System::Drawing::Point(77, 105);
+			this->filepathSelInSitu->Location = System::Drawing::Point(116, 162);
+			this->filepathSelInSitu->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->filepathSelInSitu->Name = L"filepathSelInSitu";
-			this->filepathSelInSitu->Size = System::Drawing::Size(221, 20);
+			this->filepathSelInSitu->Size = System::Drawing::Size(330, 26);
 			this->filepathSelInSitu->TabIndex = 12;
 			this->filepathSelInSitu->Text = L"C:\\";
 			// 
 			// label21
 			// 
 			this->label21->AutoSize = true;
-			this->label21->Location = System::Drawing::Point(24, 108);
+			this->label21->Location = System::Drawing::Point(36, 166);
+			this->label21->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label21->Name = L"label21";
-			this->label21->Size = System::Drawing::Size(47, 13);
+			this->label21->Size = System::Drawing::Size(70, 20);
 			this->label21->TabIndex = 11;
 			this->label21->Text = L"Filepath:";
 			// 
 			// label19
 			// 
 			this->label19->AutoSize = true;
-			this->label19->Location = System::Drawing::Point(24, 300);
+			this->label19->Location = System::Drawing::Point(36, 462);
+			this->label19->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label19->Name = L"label19";
-			this->label19->Size = System::Drawing::Size(64, 13);
+			this->label19->Size = System::Drawing::Size(92, 20);
 			this->label19->TabIndex = 10;
 			this->label19->Text = L"Total Saves";
 			// 
 			// SII_total_Saves
 			// 
-			this->SII_total_Saves->Location = System::Drawing::Point(27, 316);
+			this->SII_total_Saves->Location = System::Drawing::Point(40, 486);
+			this->SII_total_Saves->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->SII_total_Saves->Name = L"SII_total_Saves";
-			this->SII_total_Saves->Size = System::Drawing::Size(100, 20);
+			this->SII_total_Saves->Size = System::Drawing::Size(148, 26);
 			this->SII_total_Saves->TabIndex = 9;
 			this->SII_total_Saves->Text = L"-1";
 			this->SII_total_Saves->LostFocus += gcnew System::EventHandler(this, &UEMAuto::SII_total_Saves_TextChanged);
 			// 
 			// selectiveInSitu
 			// 
-			this->selectiveInSitu->Location = System::Drawing::Point(24, 504);
+			this->selectiveInSitu->Location = System::Drawing::Point(36, 775);
+			this->selectiveInSitu->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->selectiveInSitu->Name = L"selectiveInSitu";
-			this->selectiveInSitu->Size = System::Drawing::Size(118, 51);
+			this->selectiveInSitu->Size = System::Drawing::Size(177, 78);
 			this->selectiveInSitu->TabIndex = 3;
 			this->selectiveInSitu->Text = L"Begin Acquisition";
 			this->selectiveInSitu->UseVisualStyleBackColor = true;
@@ -1261,18 +1350,20 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// label18
 			// 
 			this->label18->AutoSize = true;
-			this->label18->Location = System::Drawing::Point(204, 170);
+			this->label18->Location = System::Drawing::Point(306, 262);
+			this->label18->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label18->Name = L"label18";
-			this->label18->Size = System::Drawing::Size(83, 13);
+			this->label18->Size = System::Drawing::Size(124, 20);
 			this->label18->TabIndex = 8;
 			this->label18->Text = L"Images Skipped";
 			// 
 			// label17
 			// 
 			this->label17->AutoSize = true;
-			this->label17->Location = System::Drawing::Point(682, 157);
+			this->label17->Location = System::Drawing::Point(1023, 242);
+			this->label17->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label17->Name = L"label17";
-			this->label17->Size = System::Drawing::Size(75, 26);
+			this->label17->Size = System::Drawing::Size(110, 40);
 			this->label17->TabIndex = 7;
 			this->label17->Text = L"Time Between\r\nSaves (sec)";
 			this->label17->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
@@ -1280,36 +1371,40 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// label14
 			// 
 			this->label14->AutoSize = true;
-			this->label14->Location = System::Drawing::Point(24, 170);
+			this->label14->Location = System::Drawing::Point(36, 262);
+			this->label14->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label14->Name = L"label14";
-			this->label14->Size = System::Drawing::Size(84, 13);
+			this->label14->Size = System::Drawing::Size(124, 20);
 			this->label14->TabIndex = 6;
 			this->label14->Text = L"Acquisition Time";
 			// 
 			// SII_skipped
 			// 
-			this->SII_skipped->Location = System::Drawing::Point(207, 186);
+			this->SII_skipped->Location = System::Drawing::Point(310, 286);
+			this->SII_skipped->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->SII_skipped->Name = L"SII_skipped";
-			this->SII_skipped->Size = System::Drawing::Size(100, 20);
+			this->SII_skipped->Size = System::Drawing::Size(148, 26);
 			this->SII_skipped->TabIndex = 5;
 			this->SII_skipped->Text = L"0";
 			this->SII_skipped->LostFocus += gcnew System::EventHandler(this, &UEMAuto::SII_skipped_TextChanged);
 			// 
 			// SII_time_Between
 			// 
-			this->SII_time_Between->Location = System::Drawing::Point(667, 186);
+			this->SII_time_Between->Location = System::Drawing::Point(1000, 286);
+			this->SII_time_Between->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->SII_time_Between->Name = L"SII_time_Between";
 			this->SII_time_Between->ReadOnly = true;
-			this->SII_time_Between->Size = System::Drawing::Size(100, 20);
+			this->SII_time_Between->Size = System::Drawing::Size(148, 26);
 			this->SII_time_Between->TabIndex = 4;
 			this->SII_time_Between->Text = L"-1";
 			this->SII_time_Between->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// SII_acq_Time
 			// 
-			this->SII_acq_Time->Location = System::Drawing::Point(27, 186);
+			this->SII_acq_Time->Location = System::Drawing::Point(40, 286);
+			this->SII_acq_Time->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->SII_acq_Time->Name = L"SII_acq_Time";
-			this->SII_acq_Time->Size = System::Drawing::Size(100, 20);
+			this->SII_acq_Time->Size = System::Drawing::Size(148, 26);
 			this->SII_acq_Time->TabIndex = 3;
 			this->SII_acq_Time->Text = L"-1";
 			this->SII_acq_Time->LostFocus += gcnew System::EventHandler(this, &UEMAuto::SII_acq_Time_TextChanged);
@@ -1319,33 +1414,84 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->label13->AutoSize = true;
 			this->label13->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label13->Location = System::Drawing::Point(21, 21);
+			this->label13->Location = System::Drawing::Point(32, 32);
+			this->label13->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label13->Name = L"label13";
-			this->label13->Size = System::Drawing::Size(751, 72);
+			this->label13->Size = System::Drawing::Size(1217, 116);
 			this->label13->TabIndex = 3;
 			this->label13->Text = resources->GetString(L"label13.Text");
 			// 
 			// tabPage1
 			// 
+			this->tabPage1->Controls->Add(this->groupBox2);
 			this->tabPage1->Controls->Add(this->loadSettingsButton);
 			this->tabPage1->Controls->Add(this->DefaultSettingsRestore);
 			this->tabPage1->Controls->Add(this->SaveSettingsButton);
 			this->tabPage1->Controls->Add(this->GeneralSettingsBox);
 			this->tabPage1->Controls->Add(this->DelaySettingsBox);
 			this->tabPage1->Controls->Add(this->CameraSettingsBox);
-			this->tabPage1->Location = System::Drawing::Point(4, 22);
+			this->tabPage1->Location = System::Drawing::Point(4, 29);
+			this->tabPage1->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->tabPage1->Name = L"tabPage1";
-			this->tabPage1->Padding = System::Windows::Forms::Padding(3);
-			this->tabPage1->Size = System::Drawing::Size(788, 584);
+			this->tabPage1->Padding = System::Windows::Forms::Padding(4, 5, 4, 5);
+			this->tabPage1->Size = System::Drawing::Size(1186, 905);
 			this->tabPage1->TabIndex = 2;
 			this->tabPage1->Text = L"Settings";
 			this->tabPage1->UseVisualStyleBackColor = true;
 			// 
+			// groupBox2
+			// 
+			this->groupBox2->Controls->Add(this->selectiveInSituIndex);
+			this->groupBox2->Controls->Add(this->label26);
+			this->groupBox2->Controls->Add(this->scanScriptIndex);
+			this->groupBox2->Controls->Add(this->label25);
+			this->groupBox2->Controls->Add(this->customMenuIndex);
+			this->groupBox2->Controls->Add(this->label24);
+			this->groupBox2->Location = System::Drawing::Point(22, 199);
+			this->groupBox2->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
+			this->groupBox2->Name = L"groupBox2";
+			this->groupBox2->Padding = System::Windows::Forms::Padding(4, 5, 4, 5);
+			this->groupBox2->Size = System::Drawing::Size(412, 163);
+			this->groupBox2->TabIndex = 11;
+			this->groupBox2->TabStop = false;
+			this->groupBox2->Text = L"Script Locations";
+			// 
+			// label25
+			// 
+			this->label25->AutoSize = true;
+			this->label25->Location = System::Drawing::Point(9, 37);
+			this->label25->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+			this->label25->Name = L"label25";
+			this->label25->Size = System::Drawing::Size(151, 20);
+			this->label25->TabIndex = 8;
+			this->label25->Text = L"Custom Menu Index";
+			// 
+			// customMenuIndex
+			// 
+			this->customMenuIndex->Location = System::Drawing::Point(332, 31);
+			this->customMenuIndex->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
+			this->customMenuIndex->Name = L"customMenuIndex";
+			this->customMenuIndex->Size = System::Drawing::Size(69, 26);
+			this->customMenuIndex->TabIndex = 7;
+			this->customMenuIndex->Text = L"8";
+			this->customMenuIndex->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+			// 
+			// label24
+			// 
+			this->label24->AutoSize = true;
+			this->label24->Location = System::Drawing::Point(9, 77);
+			this->label24->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+			this->label24->Name = L"label24";
+			this->label24->Size = System::Drawing::Size(133, 20);
+			this->label24->TabIndex = 6;
+			this->label24->Text = L"UEM Script Index";
+			// 
 			// loadSettingsButton
 			// 
-			this->loadSettingsButton->Location = System::Drawing::Point(6, 470);
+			this->loadSettingsButton->Location = System::Drawing::Point(9, 723);
+			this->loadSettingsButton->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->loadSettingsButton->Name = L"loadSettingsButton";
-			this->loadSettingsButton->Size = System::Drawing::Size(108, 51);
+			this->loadSettingsButton->Size = System::Drawing::Size(162, 78);
 			this->loadSettingsButton->TabIndex = 14;
 			this->loadSettingsButton->Text = L"Reload Settings";
 			this->loadSettingsButton->UseVisualStyleBackColor = true;
@@ -1353,9 +1499,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			// DefaultSettingsRestore
 			// 
-			this->DefaultSettingsRestore->Location = System::Drawing::Point(6, 527);
+			this->DefaultSettingsRestore->Location = System::Drawing::Point(9, 811);
+			this->DefaultSettingsRestore->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->DefaultSettingsRestore->Name = L"DefaultSettingsRestore";
-			this->DefaultSettingsRestore->Size = System::Drawing::Size(108, 51);
+			this->DefaultSettingsRestore->Size = System::Drawing::Size(162, 78);
 			this->DefaultSettingsRestore->TabIndex = 13;
 			this->DefaultSettingsRestore->Text = L"Restore Defaults";
 			this->DefaultSettingsRestore->UseVisualStyleBackColor = true;
@@ -1363,9 +1510,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			// SaveSettingsButton
 			// 
-			this->SaveSettingsButton->Location = System::Drawing::Point(683, 527);
+			this->SaveSettingsButton->Location = System::Drawing::Point(1024, 811);
+			this->SaveSettingsButton->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->SaveSettingsButton->Name = L"SaveSettingsButton";
-			this->SaveSettingsButton->Size = System::Drawing::Size(99, 51);
+			this->SaveSettingsButton->Size = System::Drawing::Size(148, 78);
 			this->SaveSettingsButton->TabIndex = 12;
 			this->SaveSettingsButton->Text = L"Save Settings";
 			this->SaveSettingsButton->UseVisualStyleBackColor = true;
@@ -1375,28 +1523,33 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			this->GeneralSettingsBox->Controls->Add(this->timeZeroPositionSetting);
 			this->GeneralSettingsBox->Controls->Add(this->label16);
-			this->GeneralSettingsBox->Location = System::Drawing::Point(15, 73);
+			this->GeneralSettingsBox->Location = System::Drawing::Point(22, 112);
+			this->GeneralSettingsBox->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->GeneralSettingsBox->Name = L"GeneralSettingsBox";
-			this->GeneralSettingsBox->Size = System::Drawing::Size(275, 50);
+			this->GeneralSettingsBox->Padding = System::Windows::Forms::Padding(4, 5, 4, 5);
+			this->GeneralSettingsBox->Size = System::Drawing::Size(412, 77);
 			this->GeneralSettingsBox->TabIndex = 10;
 			this->GeneralSettingsBox->TabStop = false;
 			this->GeneralSettingsBox->Text = L"General Settings";
 			// 
 			// timeZeroPositionSetting
 			// 
-			this->timeZeroPositionSetting->Location = System::Drawing::Point(175, 19);
+			this->timeZeroPositionSetting->Location = System::Drawing::Point(262, 29);
+			this->timeZeroPositionSetting->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->timeZeroPositionSetting->Name = L"timeZeroPositionSetting";
-			this->timeZeroPositionSetting->Size = System::Drawing::Size(94, 20);
+			this->timeZeroPositionSetting->Size = System::Drawing::Size(139, 26);
 			this->timeZeroPositionSetting->TabIndex = 7;
 			this->timeZeroPositionSetting->Text = L"293.527";
+			this->timeZeroPositionSetting->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
 			this->timeZeroPositionSetting->LostFocus += gcnew System::EventHandler(this, &UEMAuto::timeZeroPositionSetting_TextChanged);
 			// 
 			// label16
 			// 
 			this->label16->AutoSize = true;
-			this->label16->Location = System::Drawing::Point(6, 22);
+			this->label16->Location = System::Drawing::Point(9, 34);
+			this->label16->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label16->Name = L"label16";
-			this->label16->Size = System::Drawing::Size(151, 13);
+			this->label16->Size = System::Drawing::Size(224, 20);
 			this->label16->TabIndex = 6;
 			this->label16->Text = L"True Time Zero Position (mm): ";
 			// 
@@ -1404,9 +1557,11 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// 
 			this->DelaySettingsBox->Controls->Add(this->label15);
 			this->DelaySettingsBox->Controls->Add(this->delaySpeedSetting);
-			this->DelaySettingsBox->Location = System::Drawing::Point(296, 17);
+			this->DelaySettingsBox->Location = System::Drawing::Point(444, 26);
+			this->DelaySettingsBox->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->DelaySettingsBox->Name = L"DelaySettingsBox";
-			this->DelaySettingsBox->Size = System::Drawing::Size(138, 50);
+			this->DelaySettingsBox->Padding = System::Windows::Forms::Padding(4, 5, 4, 5);
+			this->DelaySettingsBox->Size = System::Drawing::Size(207, 77);
 			this->DelaySettingsBox->TabIndex = 9;
 			this->DelaySettingsBox->TabStop = false;
 			this->DelaySettingsBox->Text = L"Delay Stage Settings";
@@ -1414,28 +1569,33 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// label15
 			// 
 			this->label15->AutoSize = true;
-			this->label15->Location = System::Drawing::Point(6, 22);
+			this->label15->Location = System::Drawing::Point(9, 34);
+			this->label15->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label15->Name = L"label15";
-			this->label15->Size = System::Drawing::Size(78, 13);
+			this->label15->Size = System::Drawing::Size(116, 20);
 			this->label15->TabIndex = 5;
 			this->label15->Text = L"Default Speed:";
 			// 
 			// delaySpeedSetting
 			// 
-			this->delaySpeedSetting->Location = System::Drawing::Point(96, 19);
+			this->delaySpeedSetting->Location = System::Drawing::Point(144, 29);
+			this->delaySpeedSetting->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->delaySpeedSetting->Name = L"delaySpeedSetting";
-			this->delaySpeedSetting->Size = System::Drawing::Size(36, 20);
+			this->delaySpeedSetting->Size = System::Drawing::Size(52, 26);
 			this->delaySpeedSetting->TabIndex = 4;
 			this->delaySpeedSetting->Text = L"50";
+			this->delaySpeedSetting->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
 			this->delaySpeedSetting->TextChanged += gcnew System::EventHandler(this, &UEMAuto::delaySpeedSetting_TextChanged);
 			// 
 			// CameraSettingsBox
 			// 
 			this->CameraSettingsBox->Controls->Add(this->label5);
 			this->CameraSettingsBox->Controls->Add(this->DelayIPSetting);
-			this->CameraSettingsBox->Location = System::Drawing::Point(15, 17);
+			this->CameraSettingsBox->Location = System::Drawing::Point(22, 26);
+			this->CameraSettingsBox->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->CameraSettingsBox->Name = L"CameraSettingsBox";
-			this->CameraSettingsBox->Size = System::Drawing::Size(275, 50);
+			this->CameraSettingsBox->Padding = System::Windows::Forms::Padding(4, 5, 4, 5);
+			this->CameraSettingsBox->Size = System::Drawing::Size(412, 77);
 			this->CameraSettingsBox->TabIndex = 8;
 			this->CameraSettingsBox->TabStop = false;
 			this->CameraSettingsBox->Text = L"Camera Settings";
@@ -1443,19 +1603,22 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// label5
 			// 
 			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(6, 22);
+			this->label5->Location = System::Drawing::Point(9, 34);
+			this->label5->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(132, 13);
+			this->label5->Size = System::Drawing::Size(197, 20);
 			this->label5->TabIndex = 5;
 			this->label5->Text = L"Delay Stage Computer IP: ";
 			// 
 			// DelayIPSetting
 			// 
-			this->DelayIPSetting->Location = System::Drawing::Point(169, 19);
+			this->DelayIPSetting->Location = System::Drawing::Point(262, 29);
+			this->DelayIPSetting->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->DelayIPSetting->Name = L"DelayIPSetting";
-			this->DelayIPSetting->Size = System::Drawing::Size(100, 20);
+			this->DelayIPSetting->Size = System::Drawing::Size(140, 26);
 			this->DelayIPSetting->TabIndex = 4;
 			this->DelayIPSetting->Text = L"192.168.0.3";
+			this->DelayIPSetting->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
 			this->DelayIPSetting->TextChanged += gcnew System::EventHandler(this, &UEMAuto::DelayIPSetting_TextChanged);
 			// 
 			// trackTime
@@ -1466,9 +1629,10 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// curTime
 			// 
 			this->curTime->AutoSize = true;
-			this->curTime->Location = System::Drawing::Point(17, 667);
+			this->curTime->Location = System::Drawing::Point(26, 1026);
+			this->curTime->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->curTime->Name = L"curTime";
-			this->curTime->Size = System::Drawing::Size(49, 13);
+			this->curTime->Size = System::Drawing::Size(71, 20);
 			this->curTime->TabIndex = 2;
 			this->curTime->Text = L"00:00:00";
 			// 
@@ -1495,22 +1659,54 @@ private: System::Windows::Forms::Label^ versionNumber;
 			// versionNumber
 			// 
 			this->versionNumber->AutoSize = true;
-			this->versionNumber->Location = System::Drawing::Point(748, 9);
+			this->versionNumber->Location = System::Drawing::Point(1122, 14);
+			this->versionNumber->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->versionNumber->Name = L"versionNumber";
-			this->versionNumber->Size = System::Drawing::Size(60, 13);
+			this->versionNumber->Size = System::Drawing::Size(89, 20);
 			this->versionNumber->TabIndex = 15;
 			this->versionNumber->Text = L"Version 1.5";
 			// 
+			// scanScriptIndex
+			// 
+			this->scanScriptIndex->Location = System::Drawing::Point(332, 71);
+			this->scanScriptIndex->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
+			this->scanScriptIndex->Name = L"scanScriptIndex";
+			this->scanScriptIndex->Size = System::Drawing::Size(69, 26);
+			this->scanScriptIndex->TabIndex = 9;
+			this->scanScriptIndex->Text = L"2";
+			this->scanScriptIndex->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+			// 
+			// label26
+			// 
+			this->label26->AutoSize = true;
+			this->label26->Location = System::Drawing::Point(9, 118);
+			this->label26->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+			this->label26->Name = L"label26";
+			this->label26->Size = System::Drawing::Size(207, 20);
+			this->label26->TabIndex = 10;
+			this->label26->Text = L"Selective InSitu Script Index";
+			// 
+			// selectiveInSituIndex
+			// 
+			this->selectiveInSituIndex->Location = System::Drawing::Point(332, 112);
+			this->selectiveInSituIndex->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
+			this->selectiveInSituIndex->Name = L"selectiveInSituIndex";
+			this->selectiveInSituIndex->Size = System::Drawing::Size(69, 26);
+			this->selectiveInSituIndex->TabIndex = 11;
+			this->selectiveInSituIndex->Text = L"4";
+			this->selectiveInSituIndex->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+			// 
 			// UEMAuto
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(823, 689);
+			this->ClientSize = System::Drawing::Size(1234, 1060);
 			this->Controls->Add(this->versionNumber);
 			this->Controls->Add(this->curTime);
 			this->Controls->Add(this->cameraTab);
 			this->Controls->Add(this->label1);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			this->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->Name = L"UEMAuto";
 			this->Text = L"UEMtomaton";
 			this->cameraTab->ResumeLayout(false);
@@ -1525,6 +1721,8 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->tabPage3->ResumeLayout(false);
 			this->tabPage3->PerformLayout();
 			this->tabPage1->ResumeLayout(false);
+			this->groupBox2->ResumeLayout(false);
+			this->groupBox2->PerformLayout();
 			this->GeneralSettingsBox->ResumeLayout(false);
 			this->GeneralSettingsBox->PerformLayout();
 			this->DelaySettingsBox->ResumeLayout(false);
@@ -1682,16 +1880,14 @@ private: System::Windows::Forms::Label^ versionNumber;
 				//SetActiveWindow(hWnd);
 
 				this->PressKey(VK_F10);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_DOWN);
-				this->PressKey(VK_DOWN);
+				for (int i = 0; i < std::stoi(msclr::interop::marshal_as<std::string>(this->customMenuIndex->Text)); i++)
+				{
+					this->PressKey(VK_RIGHT);
+				}
+				for (int i = 0; i < std::stoi(msclr::interop::marshal_as<std::string>(this->scanScriptIndex->Text)); i++)
+				{
+					this->PressKey(VK_DOWN);
+				}
 				this->PressKey(VK_RETURN);
 
 				System::Threading::Thread::Sleep(30);
@@ -3147,8 +3343,11 @@ private: System::Windows::Forms::Label^ versionNumber;
 			std::string saveTimeZero = std::to_string(curZero);
 			std::string saveSpeed = msclr::interop::marshal_as<std::string>(this->delaySpeedSetting->Text);
 			std::string saveIP = msclr::interop::marshal_as<std::string>(this->DelayIPSetting->Text);
+			std::string customIdx = msclr::interop::marshal_as<std::string>(this->customMenuIndex->Text);
+			std::string scanScriptIdx = msclr::interop::marshal_as<std::string>(this->scanScriptIndex->Text);
+			std::string selectiveInSituIdx = msclr::interop::marshal_as<std::string>(this->selectiveInSituIndex->Text);
 
-			writer.WriteSet("UEMtomatonConfig.txt",saveTimeZero,saveSpeed,saveIP);
+			writer.WriteSet("UEMtomatonConfig.txt",saveTimeZero,saveSpeed,saveIP,customIdx,scanScriptIdx,selectiveInSituIdx);
 
 		}
 
@@ -3158,6 +3357,9 @@ private: System::Windows::Forms::Label^ versionNumber;
 			std::string acqTimeZero;
 			std::string acqSpeed;
 			std::string acqIP;
+			std::string customIdx;
+			std::string scanScriptIdx;
+			std::string selectiveInSituIdx;
 
 			std::ifstream OpenFile;
 
@@ -3187,6 +3389,21 @@ private: System::Windows::Forms::Label^ versionNumber;
 					else if (curLine == 2)
 					{
 						acqIP = line;
+						curLine = 3;
+					}
+					else if (curLine == 3)
+					{
+						customIdx = line;
+						curLine = 4;
+					}
+					else if (curLine == 4)
+					{
+						scanScriptIdx = line;
+						curLine = 5;
+					}
+					else if (curLine == 5)
+					{
+						selectiveInSituIdx = line;
 					}
 
 				} while (!OpenFile.eof());
@@ -3196,6 +3413,9 @@ private: System::Windows::Forms::Label^ versionNumber;
 				this->delaySpd->Text = this->delaySpeedSetting->Text;
 				this->DelayIPSetting->Text = gcnew String(acqIP.c_str());
 				this->servIP->Text = this->DelayIPSetting->Text;
+				this->customMenuIndex->Text = gcnew String(customIdx.c_str());
+				this->scanScriptIndex->Text = gcnew String(scanScriptIdx.c_str());
+				this->selectiveInSituIndex->Text = gcnew String(selectiveInSituIdx.c_str());
 
 			}
 			else
@@ -3219,6 +3439,9 @@ private: System::Windows::Forms::Label^ versionNumber;
 			this->delaySpd->Text = this->delaySpeedSetting->Text;
 			this->DelayIPSetting->Text = gcnew String("192.168.0.3");
 			this->servIP->Text = this->DelayIPSetting->Text;
+			this->customMenuIndex->Text = gcnew String("8");
+			this->scanScriptIndex->Text = gcnew String("2");
+			this->selectiveInSituIndex->Text = gcnew String("4");
 
 		}
 
@@ -3380,18 +3603,14 @@ private: System::Windows::Forms::Label^ versionNumber;
 				//SetActiveWindow(hWnd);
 
 				this->PressKey(VK_F10);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_RIGHT);
-				this->PressKey(VK_DOWN);
-				this->PressKey(VK_DOWN);
-				this->PressKey(VK_DOWN);
-				this->PressKey(VK_DOWN);
+				for (int i = 0; i < std::stoi(msclr::interop::marshal_as<std::string>(this->customMenuIndex->Text)); i++)
+				{
+					this->PressKey(VK_RIGHT);
+				}
+				for (int i = 0; i < std::stoi(msclr::interop::marshal_as<std::string>(this->selectiveInSituIndex->Text)); i++)
+				{
+					this->PressKey(VK_DOWN);
+				}
 				this->PressKey(VK_RETURN);
 
 				System::Threading::Thread::Sleep(30);

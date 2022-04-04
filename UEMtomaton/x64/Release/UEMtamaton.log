@@ -1,1 +1,60 @@
-﻿  UEMtamaton.vcxproj -> C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\x64\Release\UEMtomaton.exe
+﻿  UEMAuto.cpp
+  The contents of <filesystem> are available only with C++17 or later.
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(1847,24): warning C4441: calling convention of '__cdecl ' ignored; '__clrcall ' used instead
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(2005,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(1925,4): warning C4996: 'spawnl': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _spawnl. See online help for details.
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(2069,19): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
+          with
+          [
+              _Rep=std::chrono::system_clock::rep
+          ]
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(2212,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(2200,83): warning C4996: 'ctime': This function or variable may be unsafe. Consider using ctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(2745,26): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(2869,25): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(3041,1): warning C4305: '=': truncation from 'int' to 'char'
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(3041,21): warning C4309: '=': truncation of constant value
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(3583,9): warning C4101: 'hWnd': unreferenced local variable
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(3584,9): warning C4101: 'hWnd2': unreferenced local variable
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\xstring(2588,23): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\xstring(2599): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)' being compiled
+          with
+          [
+              _Iter=wchar_t *
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\xstring(2599): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)' being compiled
+          with
+          [
+              _Iter=wchar_t *
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\xstring(2579): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)' being compiled
+          with
+          [
+              _Iter=wchar_t *
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\xstring(2579): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)' being compiled
+          with
+          [
+              _Iter=wchar_t *
+          ]
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(1856): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\UEMAuto.h(1856): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+  WriteSettings.cpp
+  Generating Code...
+  UEMtamaton.vcxproj -> C:\Users\dudan\Documents\GitHub\UEMtomaton\UEMtomaton\x64\Release\UEMtomaton.exe
