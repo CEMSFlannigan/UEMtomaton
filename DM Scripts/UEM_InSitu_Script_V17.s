@@ -41,11 +41,10 @@ Class CAutoActOnImageUpdate
 		// ADDED INFORMATION FOR UEM AUTOMATION --> SPECIFYING COMMUNICATION TXT FILE WITH DELAY STAGE SCRIPT
 						
 		// initialization of the path to read the file locations and UEM data at current image
-		Dir1 = "X:"
-		Dir2 = "TestFile"
+		Dir1 = "C:"
 		filenameInput = "InputFileTest.txt"
 		
-		TPath = pathconcatenate(Dir1, Dir2)
+		TPath = Dir1
 		TPathTF = pathconcatenate(TPath, filenameInput)
 		taggroup texttags = ReadInTextFilePath(TPathTF)
 		taggroup MetaDataTags
